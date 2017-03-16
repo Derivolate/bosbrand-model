@@ -28,7 +28,7 @@ function bosbrand()
         oldForest = forest;
         %i = i+ 1
         forest = verspreidVuur(forest, forestSize, fireBreakDist)
-        fbr = forest2fbr(forest);
+        fbr = forest2fbr(fbr);
         fbr = moveFireFighters(fbr);
     end
 end
@@ -41,12 +41,11 @@ function [forestx, foresty] = fbrCoord2forestCoord(fbrx,fbry,fireBreakDist)
     
 end
 
-function newFbr = moveFireFighters()
-
+function newFbr = moveFireFighters(fbr)
+    newFbr = fbr;
 end
 
-function fbr = forest2fbr(forest)
-
+function fbr = forest2fbr(fbr)
 end
 
 function fbr = initFbr(fbr, fbrSize, fireBreakDist)
