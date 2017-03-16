@@ -24,12 +24,14 @@ function bosbrand()
     %vergelijk het oude bos met het nieuwe bos, als deze gelijk zijn
     %verspreid er geen vuur meer en is of het hele bos afgefikt of is de
     %brandweer de brand meester
+    figure;
     while(~isequal(forest,oldForest))
         oldForest = forest;
         %i = i+ 1
         forest = verspreidVuur(forest, forestSize, fireBreakDist)
         fbr = forest2fbr(fbr);
         fbr = moveFireFighters(fbr);
+        %hier fbr plotten en kleurtjes maken
     end
 end
 
