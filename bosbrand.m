@@ -1,12 +1,27 @@
 
 function bosbrand()
-format shortG;
+    format shortG;
     %creeer bos
-    forestSize = 9;
-    fireBreakDist = 3
-    forest = zeros(forestSize);
+    forestSize = 15;
+    fireBreakDist = 3;
+    if(~(mod(forestSize,fireBreakDist)==0))
+        disp('WARNING: forestSize is not a round multiple of fireBreakDist, output may be incorrect')
+    end
+    forest = zeros(forestSize)
     
+    %creeer wegen-net (voor brandweer)
+    %fbr = fire-break-roads
+    fbrSize = forestSize+forestSize/fireBreakDist+1;
+    fbr = zeros(fbrSize);
+    for x = 1: fbrSize 
+        for y = 1: fbrSize
+            if(mod(x-1,fireBreakDist+1)==0||mod(y-1,fireBreakDist+1)==0)
+                fbr(y,x)=1;
+            end
+        end
+    end
     
+    fbr(1,1)=2;
     %blikseminslag op 2,2
     disp('bos na blikseminslag')
     forest = bliksemInslag(forest)
@@ -21,8 +36,16 @@ format shortG;
         %i = i+ 1
         forest = verspreidVuur(forest, forestSize, fireBreakDist)
     end
-    forest
 end
+
+function [fbrx, fbry] = forestCoord2fbrCoord(forestx,foresty)
+    
+end
+
+function [forestx, foresty] = fbrCoord2forestCoord(fbrx,fbry)
+
+end
+
 
 function forest = bliksemInslag(forest)
     forest(2,2) = 1;
@@ -30,7 +53,7 @@ end
 
 function newForest = verspreidVuur(forest, forestSize, fireBreakDist)
     newForest = forest;
-    v0 = .25;
+    v0 = .3;
     for x = 1:forestSize
         for y = 1:forestSize
             %als het bos al in de fik staat, kijk er niet naar
@@ -47,7 +70,7 @@ function newForest = verspreidVuur(forest, forestSize, fireBreakDist)
                         else
                             fireBreakFactor=1;
                         end
-                        newForest(y,x) = forest(y,x) + 0.25*fireBreakFactor;
+                        newForest(y,x) = newForest(y,x) + 0.25*fireBreakFactor;
                     end
                 end
                 %west
@@ -58,7 +81,7 @@ function newForest = verspreidVuur(forest, forestSize, fireBreakDist)
                         else
                             fireBreakFactor=1;
                         end
-                        newForest(y,x)= forest(y,x)+0.25*fireBreakFactor;
+                        newForest(y,x)= newForest(y,x)+0.25*fireBreakFactor;
                     end
                 end
                 %zuid
@@ -69,7 +92,7 @@ function newForest = verspreidVuur(forest, forestSize, fireBreakDist)
                         else
                             fireBreakFactor=1;
                         end
-                        newForest(y,x)= forest(y,x)+0.25*fireBreakFactor;
+                        newForest(y,x)= newForest(y,x)+0.25*fireBreakFactor;
                     end
                 end
                 %noord
@@ -80,7 +103,7 @@ function newForest = verspreidVuur(forest, forestSize, fireBreakDist)
                         else
                             fireBreakFactor=1;
                         end
-                        newForest(y,x)= forest(y,x)+0.25*fireBreakFactor;
+                        newForest(y,x)= newForest(y,x)+0.25*fireBreakFactor;
                     end
                 end
                 %het bos kan niet meer dan 100% in de fik staan
