@@ -2,8 +2,8 @@
 function bosbrand()
     format shortG;
     %creeer bos
-    forestSize = 15;
-    fireBreakDist = 3;
+    forestSize = 4;
+    fireBreakDist = 2;
     if(~(mod(forestSize,fireBreakDist)==0))
         disp('WARNING: forestSize is not a round multiple of fireBreakDist, output may be incorrect')
     end
@@ -13,15 +13,8 @@ function bosbrand()
     %fbr = fire-break-roads
     fbrSize = forestSize+forestSize/fireBreakDist+1;
     fbr = zeros(fbrSize);
-    for x = 1: fbrSize 
-        for y = 1: fbrSize
-            if(mod(x-1,fireBreakDist+1)==0||mod(y-1,fireBreakDist+1)==0)
-                fbr(y,x)=1;
-            end
-        end
-    end
+    fbr = initFbr(fbr, fbrSize, fireBreakDist);
     
-    fbr(1,1)=2;
     %blikseminslag op 2,2
     disp('bos na blikseminslag')
     forest = bliksemInslag(forest)
@@ -35,17 +28,49 @@ function bosbrand()
         oldForest = forest;
         %i = i+ 1
         forest = verspreidVuur(forest, forestSize, fireBreakDist)
+        fbr = forest2fbr(forest);
+        fbr = moveFireFighters(fbr);
     end
 end
 
-function [fbrx, fbry] = forestCoord2fbrCoord(forestx,foresty)
+function [fbrx, fbry] = forestCoord2fbrCoord(forestx,foresty,fireBreakDist)
     
 end
 
-function [forestx, foresty] = fbrCoord2forestCoord(fbrx,fbry)
+function [forestx, foresty] = fbrCoord2forestCoord(fbrx,fbry,fireBreakDist)
+    
+end
+
+function newFbr = moveFireFighters()
 
 end
 
+function fbr = forest2fbr(forest)
+
+end
+
+function fbr = initFbr(fbr, fbrSize, fireBreakDist)
+    %{
+    Legend fbr:
+        0 = niet brandend bos
+        1 = brandend bos
+        2 = brandgang
+        3 = brandweerauto
+        4 = brandweerman
+        5 = zij brandweerman
+    %}
+    
+    for x = 1: fbrSize 
+        for y = 1: fbrSize
+            if(mod(x-1,fireBreakDist+1)==0||mod(y-1,fireBreakDist+1)==0)
+                fbr(y,x)=1;
+            end
+        end
+    end
+    
+    %Add firefighter
+    fbr(1,1)=2
+end
 
 function forest = bliksemInslag(forest)
     forest(2,2) = 1;
