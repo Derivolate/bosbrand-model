@@ -2,8 +2,8 @@
 function bosbrand()
     format shortG;
     %creeer bos
-    forestSize = 4;
-    fireBreakDist = 2;
+    forestSize = 50;
+    fireBreakDist = 25;
     if(~(mod(forestSize,fireBreakDist)==0))
         disp('WARNING: forestSize is not a round multiple of fireBreakDist, output may be incorrect')
     end
@@ -25,13 +25,24 @@ function bosbrand()
     %verspreid er geen vuur meer en is of het hele bos afgefikt of is de
     %brandweer de brand meester
     figure;
+    cMap=makeColorMap([83,244,66], [244,241,66],[244,66,66],100); %maakt een scaling colormap mbv een begin, midden, eind rgb waarde
+    cBlack=[1 1 1] %brandgang
+    cRed=[1 1 1]    %brandweerwagen
+    cBlue=[1 1 1]   %brandweerman
+    cCyan=[1 1 1]   %brandweerman zij
+    cMap=[cMap;cBlack;cRed;cBlue;cCyan]/244 %delen door 244 om een waarde tussen 0 en 1 te krijgen
     while(~isequal(forest,oldForest))
         oldForest = forest;
         %i = i+ 1
-        forest = verspreidVuur(forest, forestSize, fireBreakDist)
+        forest = verspreidVuur(forest, forestSize, fireBreakDist);
         fbr = forest2fbr(fbr);
         fbr = moveFireFighters(fbr);
         %hier fbr plotten en kleurtjes maken
+        imagesc(forest);
+        colormap(cMap);
+        colorbar;
+        caxis([0,1]) %bepaalt de lengte van de colorscale
+        drawnow;
     end
 end
 
@@ -55,10 +66,10 @@ function fbr = initFbr(fbr, fbrSize, fireBreakDist)
     Legend fbr:
         0 = niet brandend bos
         1 = brandend bos
-        2 = brandgang
-        3 = brandweerauto
-        4 = brandweerman
-        5 = zij brandweerman
+        1.1 = brandgang, black
+        1.2 = brandweerauto, red
+        1.3 = brandweerman, blue
+        1.4 = zij brandweerman, cyan
     %}
     
     for x = 1: fbrSize 
@@ -74,7 +85,7 @@ function fbr = initFbr(fbr, fbrSize, fireBreakDist)
 end
 
 function forest = bliksemInslag(forest)
-    forest(2,2) = 1;
+    forest(25,25) = 1;
 end
 
 function newForest = verspreidVuur(forest, forestSize, fireBreakDist)
@@ -92,7 +103,7 @@ function newForest = verspreidVuur(forest, forestSize, fireBreakDist)
                 if(~(x+1>forestSize))
                     if(forest(y,x+1)==1)
                         if(mod(x,fireBreakDist)==0)
-                            fireBreakFactor=.5;
+                            fireBreakFactor=.2;
                         else
                             fireBreakFactor=1;
                         end
@@ -103,7 +114,7 @@ function newForest = verspreidVuur(forest, forestSize, fireBreakDist)
                 if(~(x-1==0))
                     if(forest(y,x-1)==1)
                         if(mod(x-1,fireBreakDist)==0)
-                            fireBreakFactor=.5;
+                            fireBreakFactor=.2;
                         else
                             fireBreakFactor=1;
                         end
@@ -114,7 +125,7 @@ function newForest = verspreidVuur(forest, forestSize, fireBreakDist)
                 if(~(y+1>forestSize))
                     if(forest(y+1,x)==1)
                         if(mod(y,fireBreakDist)==0)
-                            fireBreakFactor=.5;
+                            fireBreakFactor=.2;
                         else
                             fireBreakFactor=1;
                         end
@@ -125,7 +136,7 @@ function newForest = verspreidVuur(forest, forestSize, fireBreakDist)
                 if(~(y-1==0))
                     if(forest(y-1,x)==1)
                         if(mod(y-1,fireBreakDist)==0)
-                            fireBreakFactor=.5;
+                            fireBreakFactor=.2;
                         else
                             fireBreakFactor=1;
                         end
