@@ -1,9 +1,18 @@
 
 function bosbrand()
     format shortG;
+    global forestSize;
+    global fireBreakDist;
+    global fireBreakWidth;
+    global fbrSize;
     %creeer bos
+    
     forestSize = 4;
     fireBreakDist = 2;
+    %the display width for the fire break roads. This is to make it
+    %possible to still see the firebreaks when the forest is too large to
+    %fit one forest-square in a pixel;
+    fireBreakWidth = 2;
     if(~(mod(forestSize,fireBreakDist)==0))
         disp('WARNING: forestSize is not a round multiple of fireBreakDist, output may be incorrect')
     end
@@ -11,9 +20,9 @@ function bosbrand()
     
     %creeer wegen-net (voor brandweer)
     %fbr = fire-break-roads
-    fbrSize = forestSize+forestSize/fireBreakDist+1;
+    fbrSize = forestSize+(forestSize/fireBreakDist+1)*fireBreakWidth;
     fbr = zeros(fbrSize);
-    fbr = initFbr(fbr, fbrSize, fireBreakDist);
+    fbr = initFbr(fbr);
     
     %blikseminslag op 2,2
     disp('bos na blikseminslag')
@@ -24,33 +33,45 @@ function bosbrand()
     %vergelijk het oude bos met het nieuwe bos, als deze gelijk zijn
     %verspreid er geen vuur meer en is of het hele bos afgefikt of is de
     %brandweer de brand meester
-    figure;
     while(~isequal(forest,oldForest))
         oldForest = forest;
         %i = i+ 1
-        forest = verspreidVuur(forest, forestSize, fireBreakDist)
-        fbr = forest2fbr(fbr);
-        fbr = moveFireFighters(fbr);
+        forest = spreadFire(forest)
+        fbr = forest2fbr(fbr, forest);
+        %fbr = moveFireFighters(fbr);
         %hier fbr plotten en kleurtjes maken
     end
 end
 
-function [fbrx, fbry] = forestCoord2fbrCoord(forestx,foresty,fireBreakDist)
-    
+function fbrCoord= forestCoord2fbrCoord(forestCoord)
+    global fireBreakDist;
+    global fireBreakWidth;
+    parcel = floor(mod(forestCoord,fireBreakDist));
+    fbrCoord = forestCoord + parcel*fireBreakWidth;
 end
 
-function [forestx, foresty] = fbrCoord2forestCoord(fbrx,fbry,fireBreakDist)
-    
+function forestCoord = fbrCoord2forestCoord(fbrCoord)
+
 end
 
 function newFbr = moveFireFighters(fbr)
     newFbr = fbr;
 end
 
-function fbr = forest2fbr(fbr)
+function fbr = forest2fbr(fbr, forest)
+    global forestSize;
+
+    for x = 1: forestSize
+        for y = 1: forestSize
+            fbr(forestCoord2fbrCoord(x),forestCoord2fbrCoord(y))=forest(x,y)
+        end
+    end
 end
 
-function fbr = initFbr(fbr, fbrSize, fireBreakDist)
+function fbr = initFbr(fbr)
+    global fireBreakDist;
+    global fireBreakWidth;
+    global fbrSize;
     %{
     Legend fbr:
         0 = niet brandend bos
@@ -63,21 +84,23 @@ function fbr = initFbr(fbr, fbrSize, fireBreakDist)
     
     for x = 1: fbrSize 
         for y = 1: fbrSize
-            if(mod(x-1,fireBreakDist+1)==0||mod(y-1,fireBreakDist+1)==0)
-                fbr(y,x)=1;
+            if(mod(x,fireBreakDist+fireBreakWidth)<=fireBreakWidth && mod(x,fireBreakDist+fireBreakWidth)~=0 || mod(y,fireBreakDist+fireBreakWidth)<=fireBreakWidth && mod(y,fireBreakDist+fireBreakWidth)~=0)
+                fbr(y,x)=2;
             end
         end
     end
     
     %Add firefighter
-    fbr(1,1)=2
+    fbr(1,1)=3;
 end
 
 function forest = bliksemInslag(forest)
     forest(2,2) = 1;
 end
 
-function newForest = verspreidVuur(forest, forestSize, fireBreakDist)
+function newForest = spreadFire(forest)
+    global forestSize;
+    global fireBreakDist;
     newForest = forest;
     v0 = .3;
     for x = 1:forestSize
