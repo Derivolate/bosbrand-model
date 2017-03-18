@@ -7,8 +7,8 @@ function bosbrand()
     global fbrSize;
     %creeer bos
     
-    forestSize = 4;
-    fireBreakDist = 2;
+    forestSize = 100;
+    fireBreakDist = 5;
     %the display width for the fire break roads. This is to make it
     %possible to still see the firebreaks when the forest is too large to
     %fit one forest-square in a pixel;
@@ -16,7 +16,7 @@ function bosbrand()
     if(~(mod(forestSize,fireBreakDist)==0))
         disp('WARNING: forestSize is not a round multiple of fireBreakDist, output may be incorrect')
     end
-    forest = zeros(forestSize)
+    forest = zeros(forestSize);
     
     %creeer wegen-net (voor brandweer)
     %fbr = fire-break-roads
@@ -26,20 +26,33 @@ function bosbrand()
     
     %blikseminslag op 2,2
     disp('bos na blikseminslag')
-    forest = bliksemInslag(forest)
+    forest = bliksemInslag(forest);
     
     oldForest = zeros(forestSize);
-    i = 1;
-    %vergelijk het oude bos met het nieuwe bos, als deze gelijk zijn
+    
+    
+        %vergelijk het oude bos met het nieuwe bos, als deze gelijk zijn
     %verspreid er geen vuur meer en is of het hele bos afgefikt of is de
     %brandweer de brand meester
+    figure;
+    cMap=makeColorMap([83,244,66], [244,241,66],[244,66,66],100); %maakt een scaling colormap mbv een begin, midden, eind rgb waarde
+    cBlack=[1 1 1]; %brandgang
+    cRed=[1 1 1];   %brandweerwagen
+    cBlue=[1 1 1];  %brandweerman
+    cCyan=[1 1 1];  %brandweerman zij
+    cMap=[cMap;cBlack;cRed;cBlue;cCyan]/244; %delen door 244 om een waarde tussen 0 en 1 te krijgen
     while(~isequal(forest,oldForest))
         oldForest = forest;
         %i = i+ 1
-        forest = spreadFire(forest)
+        forest = spreadFire(forest);
         fbr = forest2fbr(fbr, forest);
-        %fbr = moveFireFighters(fbr);
+        fbr = moveFireFighters(fbr);
         %hier fbr plotten en kleurtjes maken
+        imagesc(ferrest);
+        colormap(cMap);
+        colorbar;
+        caxis([0,1]) %bepaalt de lengte van de colorscale
+        drawnow;
     end
 end
 
@@ -63,7 +76,7 @@ function fbr = forest2fbr(fbr, forest)
 
     for x = 1: forestSize
         for y = 1: forestSize
-            fbr(forestCoord2fbrCoord(x),forestCoord2fbrCoord(y))=forest(x,y)
+            fbr(forestCoord2fbrCoord(x),forestCoord2fbrCoord(y))=forest(x,y);
         end
     end
 end
@@ -95,7 +108,7 @@ function fbr = initFbr(fbr)
 end
 
 function forest = bliksemInslag(forest)
-    forest(2,2) = 1;
+    forest(15,18) = 1;
 end
 
 function newForest = spreadFire(forest)
@@ -115,7 +128,7 @@ function newForest = spreadFire(forest)
                 if(~(x+1>forestSize))
                     if(forest(y,x+1)==1)
                         if(mod(x,fireBreakDist)==0)
-                            fireBreakFactor=.5;
+                            fireBreakFactor=.2;
                         else
                             fireBreakFactor=1;
                         end
@@ -126,7 +139,7 @@ function newForest = spreadFire(forest)
                 if(~(x-1==0))
                     if(forest(y,x-1)==1)
                         if(mod(x-1,fireBreakDist)==0)
-                            fireBreakFactor=.5;
+                            fireBreakFactor=.2;
                         else
                             fireBreakFactor=1;
                         end
@@ -137,7 +150,7 @@ function newForest = spreadFire(forest)
                 if(~(y+1>forestSize))
                     if(forest(y+1,x)==1)
                         if(mod(y,fireBreakDist)==0)
-                            fireBreakFactor=.5;
+                            fireBreakFactor=.2;
                         else
                             fireBreakFactor=1;
                         end
@@ -148,7 +161,7 @@ function newForest = spreadFire(forest)
                 if(~(y-1==0))
                     if(forest(y-1,x)==1)
                         if(mod(y-1,fireBreakDist)==0)
-                            fireBreakFactor=.5;
+                            fireBreakFactor=.2;
                         else
                             fireBreakFactor=1;
                         end
