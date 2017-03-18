@@ -27,11 +27,9 @@ function bosbrand()
     %blikseminslag op 2,2
     disp('bos na blikseminslag')
     forest = bliksemInslag(forest);
-    
     oldForest = zeros(forestSize);
     
-    
-        %vergelijk het oude bos met het nieuwe bos, als deze gelijk zijn
+    %vergelijk het oude bos met het nieuwe bos, als deze gelijk zijn
     %verspreid er geen vuur meer en is of het hele bos afgefikt of is de
     %brandweer de brand meester
     figure;
@@ -41,18 +39,28 @@ function bosbrand()
     cBlue=[1 1 1];  %brandweerman
     cCyan=[1 1 1];  %brandweerman zij
     cMap=[cMap;cBlack;cRed;cBlue;cCyan]/244; %delen door 244 om een waarde tussen 0 en 1 te krijgen
+    
+    pCounter=0;
+    pStepSize=5; %amount of steps before a pause
     while(~isequal(forest,oldForest))
-        oldForest = forest;
         %i = i+ 1
+        oldForest = forest;
         forest = spreadFire(forest);
         fbr = forest2fbr(fbr, forest);
         fbr = moveFireFighters(fbr);
-        %hier fbr plotten en kleurtjes maken
-        imagesc(ferrest);
+        imagesc(forest);
         colormap(cMap);
         colorbar;
         caxis([0,1]) %bepaalt de lengte van de colorscale
         drawnow;
+        
+        %a step-by-step evolution of the fire, press any key in the command
+        %window to unpause.
+        if pCounter>=pStepSize
+            pause;
+            pCounter=0;
+        end
+        pCounter=pCounter+1;
     end
 end
 
