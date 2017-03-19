@@ -29,12 +29,12 @@ function bosbrand()
     oldForest = zeros(forestSize);
     
     figure;
-    cMap=makeColorMap([83,244,66], [244,241,66],[244,66,66],100); %maakt een scaling colormap mbv een begin, midden, eind rgb waarde
-    cBlack=[1 1 1]; %brandgang
-    cRed=[1 1 1];   %brandweerwagen
-    cBlue=[1 1 1];  %brandweerman
-    cCyan=[1 1 1];  %brandweerman zij
-    cMap=[cMap;cBlack;cRed;cBlue;cCyan]/244; %delen door 244 om een waarde tussen 0 en 1 te krijgen
+    cMap=makeColorMap([83,244,66], [244,241,66],[244,66,66],101); %maakt een scaling colormap mbv een begin, midden, eind rgb waarde
+    cBrown=[139 69 19]; %brandgang
+    cGeel=[252 240 15];   %brandweerwagen
+    cBlue=[34 15 252];  %brandweerman
+    cCyan=[15 201 252];  %brandweerman zij
+    cMap=[cMap;cBrown;cGeel;cBlue;cCyan]/255; %delen door 244 om een waarde tussen 0 en 1 te krijgen
     
     pCounter=0;
     pStepSize=5; %amount of steps before a pause
@@ -89,11 +89,11 @@ function fbr = initFbr(fbr)
     %{
     Legend fbr:
         0 = niet brandend bos
-        1 = brandend bos
-        2 = brandgang
-        3 = brandweerauto
-        4 = brandweerman
-        5 = zij brandweerman
+        1 = brandend bos, rood
+        1.01 = brandgang, bruin
+        1.02 = brandweerauto, geel
+        1.03 = brandweerman, blue
+        1.04 = zij brandweerman, cyan
     %}
     
     for x = 1: fbrSize 
