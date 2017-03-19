@@ -7,12 +7,14 @@ function bosbrand()
     global fbrSize;
     %creeer bos
     
-    forestSize = 100;
-    fireBreakDist = 5;
+    forestSize = 20;
+    fireBreakDist = 4;
     %the display width for the fire break roads. This is to make it
     %possible to still see the firebreaks when the forest is too large to
     %fit one forest-square in a pixel;
-    fireBreakWidth = 2;
+    %KEEP THIS 1 FOR NOW!!!!
+    
+    fireBreakWidth = 1;
     if(~(mod(forestSize,fireBreakDist)==0))
         disp('WARNING: forestSize is not a round multiple of fireBreakDist, output may be incorrect')
     end
@@ -21,17 +23,11 @@ function bosbrand()
     %creeer wegen-net (voor brandweer)
     %fbr = fire-break-roads
     fbrSize = forestSize+(forestSize/fireBreakDist+1)*fireBreakWidth;
-    fbr = zeros(fbrSize);
-    fbr = initFbr(fbr);
-    
-    %blikseminslag op 2,2
-    disp('bos na blikseminslag')
+    forest = initFbr(zeros(fbrSize));
+    forestSize = fbrSize;
     forest = bliksemInslag(forest);
     oldForest = zeros(forestSize);
     
-    %vergelijk het oude bos met het nieuwe bos, als deze gelijk zijn
-    %verspreid er geen vuur meer en is of het hele bos afgefikt of is de
-    %brandweer de brand meester
     figure;
     cMap=makeColorMap([83,244,66], [244,241,66],[244,66,66],100); %maakt een scaling colormap mbv een begin, midden, eind rgb waarde
     cBlack=[1 1 1]; %brandgang
@@ -42,12 +38,15 @@ function bosbrand()
     
     pCounter=0;
     pStepSize=5; %amount of steps before a pause
+    
+    %vergelijk het oude bos met het nieuwe bos, als deze gelijk zijn
+    %verspreid er geen vuur meer en is of het hele bos afgefikt of is de
+    %brandweer de brand meester
     while(~isequal(forest,oldForest))
         %i = i+ 1
         oldForest = forest;
         forest = spreadFire(forest);
-        fbr = forest2fbr(fbr, forest);
-        fbr = moveFireFighters(fbr);
+        forest = moveFireFighters(forest);
         imagesc(forest);
         colormap(cMap);
         colorbar;
@@ -56,30 +55,24 @@ function bosbrand()
         
         %a step-by-step evolution of the fire, press any key in the command
         %window to unpause.
-        if pCounter>=pStepSize
-            pause;
-            pCounter=0;
-        end
+%         if pCounter>=pStepSize
+%             pause;
+%             pCounter=0;
+%         end
         pCounter=pCounter+1;
     end
 end
 
-function fbrCoord= forestCoord2fbrCoord(forestCoord)
-    global fireBreakDist;
-    global fireBreakWidth;
-    parcel = floor(mod(forestCoord,fireBreakDist));
-    fbrCoord = forestCoord + parcel*fireBreakWidth;
-end
 
 function forestCoord = fbrCoord2forestCoord(fbrCoord)
 
 end
 
-function newFbr = moveFireFighters(fbr)
-    newFbr = fbr;
+function newForest = moveFireFighters(forest)
+    newForest = forest;
 end
 
-function fbr = forest2fbr(fbr, forest)
+function fbr = addRoads(fbr, forest)
     global forestSize;
 
     for x = 1: forestSize
@@ -116,64 +109,90 @@ function fbr = initFbr(fbr)
 end
 
 function forest = bliksemInslag(forest)
-    forest(15,18) = 1;
+    global forestSize;
+    x = 1;
+    y = 1;
+    
+    while(~(forest(y,x)==0))
+        x = ceil(rand()*forestSize);
+        y = ceil(rand()*forestSize);
+    end
+    forest(y,x) = 1;
+    x
+    y
 end
 
 function newForest = spreadFire(forest)
     global forestSize;
-    global fireBreakDist;
     newForest = forest;
-    v0 = .3;
+    v0 = .2;
+    fireBreak = 1;
+    fireBreakFactor = .1;
     for x = 1:forestSize
         for y = 1:forestSize
             %als het bos al in de fik staat, kijk er niet naar
-            if(~(forest(y,x)==1))
+            if(~(forest(y,x)==1||forest(y,x)==2||forest(y,x)==3||forest(y,x)==4||forest(y,x)==5))
                 %per windrichting word gekeken of er daar bos in de fik
                 %staat. Als dat het geval is wordt er meer vuur toegevoegd
                 %aan het vakje
                 
                 %oost
-                if(~(x+1>forestSize))
-                    if(forest(y,x+1)==1)
-                        if(mod(x,fireBreakDist)==0)
-                            fireBreakFactor=.2;
-                        else
-                            fireBreakFactor=1;
+                %check if the next tile is still inside the matrix
+                if(~(x+2>forestSize))
+                    %if the tile next to us isn't a firetruck or a
+                    %firefighter
+                    if(~(forest(y,x+1)==3||forest(y,x+1)==4||forest(y,x+1)==5))
+                        %if the tile next to us is on fire, or the tile next to
+                        %us is a fire-break and the tile next to that tile is on
+                        %fire
+                        if(forest(y,x+1)==1||(forest(y,x+1)==2&&forest(y,x+2)==1))
+                            if(forest(y,x+1)==2)
+                                fireBreak = fireBreakFactor;
+                            else
+                                fireBreak = 1;
+                            end
+                            newForest(y,x) = newForest(y,x) + v0*fireBreak;
                         end
-                        newForest(y,x) = newForest(y,x) + 0.25*fireBreakFactor;
                     end
                 end
                 %west
-                if(~(x-1==0))
-                    if(forest(y,x-1)==1)
-                        if(mod(x-1,fireBreakDist)==0)
-                            fireBreakFactor=.2;
-                        else
-                            fireBreakFactor=1;
+                if(~(x-2==0))
+                    if(~(forest(y,x-1)==3||forest(y,x-1)==4||forest(y,x-1)==5))
+
+                        if(forest(y,x-1)==1||(forest(y,x-1)==2&&forest(y,x-2)==1))
+                            if(forest(y,x-1)==2)
+                                fireBreak = fireBreakFactor;
+                            else
+                                fireBreak = 1;
+                            end
+                            newForest(y,x) = newForest(y,x) + v0*fireBreak;
                         end
-                        newForest(y,x)= newForest(y,x)+0.25*fireBreakFactor;
                     end
                 end
                 %zuid
-                if(~(y+1>forestSize))
-                    if(forest(y+1,x)==1)
-                        if(mod(y,fireBreakDist)==0)
-                            fireBreakFactor=.2;
-                        else
-                            fireBreakFactor=1;
+                if(~(y+2>forestSize))                    
+                    if(~(forest(y+1,x)==3||forest(y+1,x)==4||forest(y+1,x)==5))
+                        if(forest(y+1,x)==1||(forest(y+1,x)==2&&forest(y+2,x)==1))
+                            if(forest(y+1,x)==2)
+                                fireBreak = fireBreakFactor;
+                            else
+                                fireBreak = 1;
+                            end
+                            newForest(y,x) = newForest(y,x) + v0*fireBreak;
                         end
-                        newForest(y,x)= newForest(y,x)+0.25*fireBreakFactor;
                     end
                 end
                 %noord
-                if(~(y-1==0))
-                    if(forest(y-1,x)==1)
-                        if(mod(y-1,fireBreakDist)==0)
-                            fireBreakFactor=.2;
-                        else
-                            fireBreakFactor=1;
+                if(~(y-2==0))
+                    if(~(forest(y-1,x)==3||forest(y-1,x)==4||forest(y-1,x)==5))
+                        if(forest(y-1,x)==1||(forest(y-1,x)==2&&forest(y-2,x)==1))
+                            if(forest(y-1,x)==2)
+                                fireBreak = fireBreakFactor;
+                            else
+                                fireBreak = 1;
+                            end
+                            newForest(y,x) = newForest(y,x) + v0*fireBreak;
                         end
-                        newForest(y,x)= newForest(y,x)+0.25*fireBreakFactor;
                     end
                 end
                 %het bos kan niet meer dan 100% in de fik staan
