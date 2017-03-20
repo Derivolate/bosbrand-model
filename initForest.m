@@ -3,14 +3,14 @@ function forest = initForest(forestSize)
     global fireBreakWidth;
     
     %{
-    Legend fbr:
+    Legend forest:
         0 = niet brandend bos
-        1 = brandend bos
-        2 = brandgang
-        3 = brandweerauto
-        4 = brandweerman
-        5 = zij brandweerman
-    %}
+        1 = brandend bos, rood
+        1.01 = brandgang, bruin
+        1.02 = brandweerauto, geel
+        1.03 = brandweerman, blue
+        1.04 = zij brandweerman, cyan
+%}
     forest = zeros(forestSize);
     for x = 1: forestSize 
         for y = 1: forestSize
@@ -30,7 +30,4 @@ function forest = initForest(forestSize)
     forest(y,x) = 1;
     x
     y
-    
-    %Add firefighter
-    forest(1,1)=3;
 end

@@ -13,8 +13,8 @@ classdef fireTruckManager
     
     methods
 
-        function forest = moveFireFighters(~, forest)
-            getBounds(forest);
+        function forest = moveFireFighters(this, forest)
+            this.getBounds(forest);
         end
         function getBounds(this,forest)
             global forestSize;

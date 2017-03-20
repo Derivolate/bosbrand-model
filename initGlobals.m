@@ -4,7 +4,7 @@ function initGlobals()
     global fireBreakWidth;
 
     forestSize = 20;
-    fireBreakDist = 1;
+    fireBreakDist = 10;
     %the display width for the fire break roads. This is to make it
     %possible to still see the firebreaks when the forest is too large to
     %fit one forest-square in a pixel;

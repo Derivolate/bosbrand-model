@@ -10,13 +10,13 @@ function bosbrand()
     %ftm.setDestinations(forest);
     
     figure;
-    cMap=makeColorMap([83,244,66], [244,241,66],[244,66,66],100); %maakt een scaling colormap mbv een begin, midden, eind rgb waarde
-    cBlack=[1 1 1]; %brandgang
-    cRed=[1 1 1];   %brandweerwagen
-    cBlue=[1 1 1];  %brandweerman
-    cCyan=[1 1 1];  %brandweerman zij
-    cMap=[cMap;cBlack;cRed;cBlue;cCyan]/244; %delen door 244 om een waarde tussen 0 en 1 te krijgen
-    
+    cMap=makeColorMap([83,244,66], [244,241,66],[244,66,66],101); %maakt een scaling colormap mbv een begin, midden, eind rgb waarde
+    cBrown=[139 69 19]; %brandgang
+    cGeel=[252 240 15];   %brandweerwagen
+    cBlue=[34 15 252];  %brandweerman
+    cCyan=[15 201 252];  %brandweerman zij
+    cMap=[cMap;cBrown;cGeel;cBlue;cCyan]/255; %delen door 244 om een waarde tussen 0 en 1 te krijgen
+
     pCounter=0;
     pStepSize=5; %amount of steps before a pause
     
@@ -31,8 +31,8 @@ function bosbrand()
         forest = ftm.moveFireFighters(forest);
         
         imagesc(forest);
-        %colormap(cMap);
-        colormap hsv;
+        colormap(cMap);
+        %colormap hsv;
         colorbar;
         caxis([0,5]) %bepaalt de lengte van de colorscale
         drawnow;
