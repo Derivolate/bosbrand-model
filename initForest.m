@@ -30,4 +30,5 @@ function forest = initForest(forestSize)
     forest(y,x) = 1;
     x
     y
+%     forest(89,104)=1;
 end

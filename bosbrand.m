@@ -10,13 +10,7 @@ function bosbrand()
     %ftm.setDestinations(forest);
     
     figure;
-    cMap=makeColorMap([83,244,66], [244,241,66],[244,66,66],101); %maakt een scaling colormap mbv een begin, midden, eind rgb waarde
-    cBrown=[139 69 19]; %brandgang
-    cGeel=[252 240 15];   %brandweerwagen
-    cBlue=[34 15 252];  %brandweerman
-    cCyan=[15 201 252];  %brandweerman zij
-    cMap=[cMap;cBrown;cGeel;cBlue;cCyan]/255; %delen door 244 om een waarde tussen 0 en 1 te krijgen
-
+    cMap = getCMap();
     pCounter=0;
     pStepSize=5; %amount of steps before a pause
     
@@ -45,4 +39,22 @@ function bosbrand()
 %         end
         pCounter=pCounter+1;
     end
+end
+
+function cMap = getCMap()
+    cNoFire = [83,244,66];
+    cMiddleFire = [244,241,66];
+    cLit = [244,66,66];
+    cFireBreak = [139 69 19]; %Brown
+    cFireTruck=[252 240 15];   %Yellow
+    cFireFighter=[34 15 252];  %Blue
+    cFireFighterSide=[15 201 252];  %Cyan
+    
+    cMapFire=makeColorMap(cNoFire, cMiddleFire,cLit,100); %maakt een scaling colormap mbv een begin, midden, eind rgb waarde
+    cMapFireBreak = makeColorMap(cLit,cFireBreak,100);
+    cMapFireTruck = makeColorMap(cFireBreak, cFireTruck,100);
+    cMapFireFighter = makeColorMap(cFireTruck,cFireFighter,100);
+    cMapFireFighterSide = makeColorMap(cFireFighter,cFireFighterSide,100);
+    cMap=[cMapFire; cMapFireBreak; cMapFireTruck; cMapFireFighter; cMapFireFighterSide];
+    cMap = cMap/255;%delen door 255 om een waarde tussen 0 en 1 te krijgen
 end

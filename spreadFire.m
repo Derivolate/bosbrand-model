@@ -10,7 +10,7 @@ function newForest = spreadFire(forest)
     %direction
     global fireBreak;
     global fireBreakFactor;
-    
+    global randomFireSpread;
     fireBreak = 1;
     newForest = forest;
     for x = 1:forestSize
@@ -85,8 +85,22 @@ function newForest = spreadFire(forest)
                     end
                 end
                 %het bos kan niet meer dan 100% in de fik staan
-                if(newForest(y,x)>1)
-                    newForest(y,x)=1;
+                if(randomFireSpread == 0)
+                    if(newForest(y,x)>1)
+                        newForest(y,x)=1;
+                    end
+                else
+                    if(newForest(y,x) > 0);
+                        r = 0;
+                        %make sure the forest must be at least a bit on
+                        %fire before it can fully ignite.
+                        while(r==0)
+                            r = rand;
+                        end
+                        if(newForest(y,x)>r)
+                            newForest(y,x)=1;
+                        end
+                    end
                 end
             end
         end
@@ -94,15 +108,18 @@ function newForest = spreadFire(forest)
 end
 
 function v = fireSpeed()
-    global forestSize;
     global v0;
     global fireBreak;
     global wind;
     global tempFactor;
-    
+    global randomFireSpread;
+    global randomSpeedReducer;
     v = (v0*tempFactor+ wind)*fireBreak;
     if (v<0)
         v=0;
+    end
+    if(randomFireSpread == 1)
+        v = v/randomSpeedReducer;
     end
     v;
 end
