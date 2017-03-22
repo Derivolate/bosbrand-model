@@ -1,10 +1,11 @@
 
 function bosbrand()
+    %start timer
+    tic;
     format shortG;
     set(0,'DefaultFigureWindowStyle','normal')
-    global forestSize;
     initGlobals();
-    forest = initForest(forestSize);
+    forest = initForest();
     
     ftm = fireTruckManager();
     %ftm.setDestinations(forest);
@@ -17,7 +18,7 @@ function bosbrand()
     %vergelijk het oude bos met het nieuwe bos, als deze gelijk zijn
     %verspreid er geen vuur meer en is of het hele bos afgefikt of is de
     %brandweer de brand meester
-    oldForest = zeros(forestSize);
+    oldForest = zeros(size(forest));
     while(~isequal(forest,oldForest))
         %i = i+ 1
         oldForest = forest;
@@ -38,6 +39,9 @@ function bosbrand()
 %             pCounter=0;
 %         end
         pCounter=pCounter+1;
+        %display elapsed time
+        toc
+        
     end
 end
 

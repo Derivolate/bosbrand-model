@@ -1,33 +1,29 @@
 function initGlobals()
-    global forestSize;
-    global fireBreakDist;
-    global fireBreakWidth;
+    global forestWidth;
+    global forestHeight;
+    global fireBreakDistX;
+    global fireBreakDistY;
     global randomFireSpread;
     global randomSpeedReducer;
+    global enableIgniteFlags;
     
-    forestWidth = 1000; %m
+    forestLength = 8999; %m
     tileWidth = 10; %m
-    fireBreakCount = 20;
-    fireBreakWidthPhys = 20; %m
+    fireBreakCountX = 20;
+    fireBreakCountY = 20;
+    fireBreakWidthPhysX = 10; %m
+    fireBreakWidthPhysY = 10; %m
+    [fireBreakDistX, forestWidth] = calcForestSizes(forestLength, tileWidth, fireBreakCountX, fireBreakWidthPhysX);
+    [fireBreakDistY, forestHeight] = calcForestSizes(forestLength, tileWidth, fireBreakCountY, fireBreakWidthPhysY);
     
-    [fireBreakDist, forestSize] = calcForestSizes(forestWidth, tileWidth, fireBreakCount, fireBreakWidthPhys);
+    forestWidth = forestWidth+(forestWidth/fireBreakDistX)+1;
+    forestHeight = forestHeight+(forestHeight/fireBreakDistY)+1;
     
     randomFireSpread = 0;
     %factor by which the speed at which the fire spreads is reduced as a
     %whole, but only when randomFireSpread is 1
     randomSpeedReducer = 2;
-    %the display width for the fire break roads. This is to make it
-    %possible to still see the firebreaks when the forest is too large to
-    %fit one forest-square in a pixel;
-    %KEEP THIS 1 FOR NOW!!!!
-    fireBreakWidth = 1;
-    
-
-    %creeer wegen-net (voor brandweer)
-    forestSize = forestSize+(forestSize/fireBreakDist+1)*fireBreakWidth;
-    
-
-    
+    enableIgniteFlags = 1;
     global v0;
     global fireBreakFactor;
     global windDir;
@@ -35,7 +31,6 @@ function initGlobals()
     global humidityMod;     
     global rainMod;         
     global tempFactor;
-    
     
     windDir = (1/3)*pi;
     windStr = .15;
@@ -82,13 +77,16 @@ end
 function [fireBreakDist,forestSize] = calcForestSizes(forestWidth, tileWidth, fireBreakCount, fireBreakWidthPhys)
     realForestWidth = forestWidth - fireBreakWidthPhys*(fireBreakCount); %m
     forestSize = round(realForestWidth/tileWidth);
-    while(~(round(forestSize/(fireBreakCount+1))==forestSize/(fireBreakCount+1)))
-        forestSize = forestSize-1;
+    %The amount of tiles in one direction must be divisible by the amount
+    %of firebreaks
+    while(~(mod(forestSize, fireBreakCount+1)==0))
+        forestSize = forestSize+1;    
     end
+    
     fireBreakDist = forestSize/(fireBreakCount+1);
-    widthDifference = forestWidth - (tileWidth*forestSize+ (fireBreakCount*fireBreakWidthPhys));
-    widthDifferenceRatio = (widthDifference/forestWidth)*100;
-    realForestWidth
+    widthDifference = (tileWidth*forestSize+ (fireBreakCount*fireBreakWidthPhys)) - forestWidth;
+    widthDifferenceRatio = (widthDifference/forestWidth);
+    realForestWidth = forestSize*tileWidth
     forestSize
     fireBreakDist
     widthDifference

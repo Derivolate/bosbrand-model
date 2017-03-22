@@ -17,16 +17,17 @@ classdef fireTruckManager
             this.getBounds(forest);
         end
         function getBounds(this,forest)
-            global forestSize;
+            global forestWidth;
+            global forestHeight;
             this.leftBound=0;
             this.topBound = 0;
-            this.rightBound = forestSize;
-            this.botBound = forestSize;
+            this.rightBound = forestWidth;
+            this.botBound = forestHeight;
             flag = 0;
             
             %loop through all columns until a tile is found that is on fire
-            for x = 1:forestSize
-                for y = 1: forestSize
+            for x = 1:forestWidth
+                for y = 1: forestHeight
                     if(forest(y,x)>0&&forest(y,x)<=1)
                         %then, loop back until a tile is found with a
                         %firebreak
@@ -48,8 +49,8 @@ classdef fireTruckManager
             end
             flag = 0;
             
-            for y = 1:forestSize
-                for x = 1: forestSize
+            for x = 1:forestWidth
+                for y = 1: forestHeight
                     if(forest(y,x)>0&&forest(y,x)<=1)
                         for i = y:-1:0
                             if(forest(i,x)==2||forest(i,x)==3||forest(i,x)==4||forest(i,x)==5)
@@ -71,12 +72,12 @@ classdef fireTruckManager
             
             %Here we loop through all the columns backwards to find the
             %right side of the fire
-            for x = forestSize:-1:1
-                for y = 1: forestSize
+            for x = forestWidth:-1:1
+                for y = 1: forestHeight
                     if(forest(y,x)>0&&forest(y,x)<=1)
                         %And loop forward when we found fire until we find
                         %a firebreak
-                        for i = x:forestSize
+                        for i = x:forestWidth
                             if(forest(i,x)==2||forest(i,x)==3||forest(i,x)==4||forest(i,x)==5)
                                 this.rightBound = i;
                                 flag = 1;
@@ -94,10 +95,10 @@ classdef fireTruckManager
             end
             flag = 0;
             
-            for y = forestSize:-1:1
-                for x = 1: forestSize
+            for y = forestHeight:-1:1
+                for x = 1: forestWidth
                     if(forest(y,x)>0&&forest(y,x)<=1)
-                        for i = y:forestSize
+                        for i = y:forestHeight
                             if(forest(i,x)==2||forest(i,x)==3||forest(i,x)==4||forest(i,x)==5)
                                 this.botBound = i;
                                 flag = 1;

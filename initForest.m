@@ -1,22 +1,30 @@
-function forest = initForest(forestSize)
-    global fireBreakDist;
-    global fireBreakWidth;
+function forest = initForest()
+    global fireBreakDistX;
+    global fireBreakDistY;
+    global forestWidth;
+    global forestHeight;
+    global igniteFlags;
     
     %{
     Legend forest:
         0 = niet brandend bos
         1 = brandend bos, rood
-        1.01 = brandgang, bruin
-        1.02 = brandweerauto, geel
-        1.03 = brandweerman, blue
-        1.04 = zij brandweerman, cyan
+        2 = brandgang, bruin
+        3 = brandweerauto, geel
+        4 = brandweerman, blue
+        5 = zij brandweerman, cyan
 %}
-    forest = zeros(forestSize);
-    for x = 1: forestSize 
-        for y = 1: forestSize
-            if(mod(x,fireBreakDist+fireBreakWidth)<=fireBreakWidth && mod(x,fireBreakDist+fireBreakWidth)~=0 || mod(y,fireBreakDist+fireBreakWidth)<=fireBreakWidth && mod(y,fireBreakDist+fireBreakWidth)~=0)
+    forest = zeros(forestHeight,forestWidth);
+    for x = 1: forestWidth 
+        for y = 1: forestHeight
+            %add the firebreaks to the grid
+            if(mod(x,fireBreakDistX+1)==1 || mod(y,fireBreakDistY+1)==1)
                 forest(y,x)=2;
+            %make the left side of each parcel -1 to indicate that it hasn't ignited yet
+            elseif(mod(y,fireBreakDistY+1)==2)
+                forest(y,x)=-1;
             end
+            
         end
     end
     
@@ -24,11 +32,32 @@ function forest = initForest(forestSize)
     x = 1;
     y = 1;
     while(~(forest(y,x)==0))
-        x = ceil(rand()*forestSize);
-        y = ceil(rand()*forestSize);
+        x = ceil(rand()*forestWidth);
+        y = ceil(rand()*forestHeight);
     end
+    
+    x= 3;
+    y= 3;
+    
     forest(y,x) = 1;
     x
     y
+    
+    xTemp = x;
+    %remove the parcel-ignited-flag
+    %From the ignited tile, go upwards till a tile
+    %which isn't forest or has has the parcel-ignited-flag
+    while(forest(y,x)>=0 && forest(y,x)<=1)
+        y = y-1;
+    end
+    while(forest(y,x)==-1)
+        forest(y,x) = 0;
+        x = x-1;
+    end
+    x = xTemp+1;
+    while(forest(y,x)==-1)
+        forest(y,x) = 0;
+        x = x+1;
+    end
 %     forest(89,104)=1;
 end
