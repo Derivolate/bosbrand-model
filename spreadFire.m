@@ -3,19 +3,15 @@ function newForest = spreadFire(forest)
     global forestHeight;
     global fireBreakDistX;
     global fireBreakDistY;
-    global igniteFlags;
-    %result variable of windDir and windStr combined. Calculated per direction
+    global enableIgniteFlags;
     global wind;
     global windDir;
     global windStr;
-    
-    %indication if there is a fire break or not. 1 if there is no fire
-    %break, otherwise it has the value of fireBreakFactor. Calculated per
-    %direction
     global fireBreak;
     global fireBreakFactor;
     global randomFireSpread;
     fireBreak = 1;
+    
     newForest = forest;
     skipY = 0;
     for x = 1:forestWidth
@@ -65,7 +61,6 @@ function newForest = spreadFire(forest)
             %west
             if(~(x-2==0))
                 if(~(forest(y,x-1)==3||forest(y,x-1)==4||forest(y,x-1)==5))
-
                     if(forest(y,x-1)==1||(forest(y,x-1)==2&&forest(y,x-2)==1))
                         if(forest(y,x-1)==2)
                             fireBreak = fireBreakFactor;
@@ -78,6 +73,7 @@ function newForest = spreadFire(forest)
                 end
             end
             %zuid
+
             if(~(y+2>forestHeight))                    
                 if(~(forest(y+1,x)==3||forest(y+1,x)==4||forest(y+1,x)==5))
                     if(forest(y+1,x)==1||(forest(y+1,x)==2&&forest(y+2,x)==1))
@@ -105,11 +101,11 @@ function newForest = spreadFire(forest)
                     end
                 end
             end
-            %het bos kan niet meer dan 100% in de fik staan
-            if(randomFireSpread == 0)
-                if(newForest(y,x)>1)
+            
+            if(randomFireSpread == 0 || randomFireSpread == 2)
+                if(newForest(y,x)>=1)
                     newForest(y,x)=1;
-                    if(igniteFlags)
+                    if(enableIgniteFlags)
                         newForest = checkForFlags(newForest,y,x);
                     end
                 end
@@ -123,7 +119,7 @@ function newForest = spreadFire(forest)
                     end
                     if(newForest(y,x)>r)
                         newForest(y,x)=1;
-                        if(igniteFlags)
+                        if(enableIgniteFlags)
                             newForest = checkForFlags(newForest,y,x);
                         end
                     end
@@ -146,7 +142,7 @@ function forest = checkForFlags(forest,y,x)
     tempY = y;
     if(isFireBreak(forest(y-1,x)))
         if(~(y==2))
-            y = y-fireBreakDistY;
+            y = y-fireBreakDistY-1;
             removeFlag = 1;
         end
     elseif(isFireBreak(forest(y+1,x)))
@@ -185,12 +181,20 @@ function forest = checkForFlags(forest,y,x)
 end
 function v = fireSpeed()
     global v0;
+    global v0sd;
     global fireBreak;
     global wind;
     global tempFactor;
     global randomFireSpread;
     global randomSpeedReducer;
-    v = (v0*tempFactor+ wind)*fireBreak;
+    global gamma;
+    if(randomFireSpread == 2)
+        vbase = random('Normal',v0,v0sd);
+    else
+        vbase = v0;
+    end
+    
+    v = (vbase*tempFactor+ wind - gamma)*fireBreak;
     if (v<0)
         v=0;
     end
