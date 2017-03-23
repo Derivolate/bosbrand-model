@@ -132,6 +132,7 @@ end
 function bool = isFireBreak(x)
     bool = (x==2||x==3||x==4||x==5);
 end
+
 function forest = checkForFlags(forest,y,x)
     global fireBreakDistX;
     global fireBreakDistY;
@@ -179,6 +180,7 @@ function forest = checkForFlags(forest,y,x)
         end
     end
 end
+
 function v = fireSpeed()
     global v0;
     global v0sd;

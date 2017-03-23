@@ -8,7 +8,7 @@ function initGlobals()
     global enableIgniteFlags;
     
     
-    %Size physical of the forest in meters (this should be the square root of 8000)
+    %Size physical of the forest in meters (this should be the square root of 80000)
     forestSize = 10000;
     %The physical width of the tiles in meters. This should be kept constant
     tileWidth = 10;
@@ -34,7 +34,7 @@ function initGlobals()
         1 = rolls a pseudo-random dice at the end of each calculation to
             decide if the fire spreads
         2 = changes the static base-speed of the firespread to a normally
-            distributed factor (not implemented yet)
+            distributed factor 
     %}
     randomFireSpread = 2;
     %factor by which the speed at which the fire spreads is reduced as a
@@ -62,7 +62,7 @@ function initGlobals()
     %randomFireSpread is set to 2;
     v0 = .2;
     %If randomFireSpread is set to 2, this is the standard deviation
-    v0sd = .2;
+    v0sd = .1;
     %This is the factor by which the total speed is reduced when the fire
     %hits a firebreak
     fireBreakFactor = .5;
