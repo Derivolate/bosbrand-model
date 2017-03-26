@@ -13,19 +13,23 @@ classdef fireTruckManager
     end
     
     methods
-        function this = fireTruckManager()
+        function this = fireTruckManager(forest)
             global fireTruckCount
-            global forest
             for i=1:fireTruckCount
                 ft = fireTruck([0,0],[0,0]);
                 fireTrucks(i) = ft;
             end
-            this.fireTrucks = fireTrucks;   
+            this.fireTrucks = fireTrucks; 
+            
             this.getBounds(forest)
-            this.leftBound=100
-            this.rightBound=200
-            this.topBound=100
-            this.botBound=200
+%             this.leftBound=25;
+%             this.rightBound=255;
+%             this.topBound=35;
+%             this.botBound=455;
+            
+            %voeg de truckCoords toe de properties, moet later in een keer
+            %in fireTrucks
+            truckCoords = this.getCoords(); 
         end
         
         function forest = moveFireFighters(this, forest)
@@ -35,7 +39,7 @@ classdef fireTruckManager
         function getBounds(this,forest)
             global forestWidth;
             global forestHeight;
-            this.leftBound=0;
+            this.leftBound = 0;
             this.topBound = 0;
             this.rightBound = forestWidth;
             this.botBound = forestHeight;
@@ -133,54 +137,60 @@ classdef fireTruckManager
             
         end
         
-        function forest = getCoord(this, forest)
+        function truckCoords = getCoords(this) %berekend de coordinaten waar de trucks naartoe moeten
             global fireTruckCount
-            x=this.leftBound;
-            y=this.topBound;
-%             this.getBounds(forest);
-            this.truckCoords = zeros(2,fireTruckCount);
-            totalBound = this.leftBound+this.rightBound+this.topBound+this.botBound;
-            truckWidth = totalBound/fireTruckCount;
-            side=1;
+            x = this.leftBound;
+            y = this.topBound;
+            truckCoords = zeros(2,fireTruckCount);
+            
+            fireWidth = this.rightBound-this.leftBound; % de breedte van het bos dat in de fik staat
+            fireHeight = this.botBound-this.topBound; %de hoogte van het bos dat in de fik staat
+            totalBound = 2*fireHeight+2*fireWidth; %de totale boundary die bemand moet worden
+            truckWidth = totalBound/fireTruckCount; %de breedte van het bos dat een firetruck moet beschermen
+          
+            side=1; %side1=bovenkant, side2=rechts, side3=onder, side4=links
+            %begint bij de linkerboven hoek en loopt dan iedere keer een
+            %truckwidth verder met de klok mee
             for i=1:fireTruckCount
-                this.truckCoords(1,i)=x;
-                this.truckCoords(2,i)=y;
-                if side==1;
-                    if truckWidth<this.topBound
-                        x=x+truckWidth;
-                    else
-                        x=this.rightBound;
-                        y=this.topBound+(truckWidth-(this.rightBound-this.leftBound));
-                        side=2;
+                truckCoords(1,i) = x; % voeg x toe aan een 2xi-matrix met coordinaten
+                truckCoords(2,i) = y; % voeg y toe aan een 2xi-matrix met coordinaten
+                if side == 4 %als laatste zijde 4
+                    if y-truckWidth>this.topBound
+                        y = y-truckWidth;
                     end
                 end
-                if side==2
-                    if y+truckWidth<this.topBound
-                        y=y+truckWidth;
+                if side == 3
+                    if x-truckWidth>this.leftBound
+                        x = x-truckWidth;
                     else
-                        x=this.rightBound;
-                        y=this.topBound+(truckWidth-(this.rightBound-this.leftBound));
-                        side=2;
+                        y = this.botBound-(truckWidth-(x-this.leftBound));
+                        x = this.leftBound;
+                        side = 4;
                     end
                 end
-                if side==3
-                    x=x-truckWidth;
+                if side == 2
+                    if y+truckWidth<this.botBound
+                        y = y+truckWidth;
+                    else
+                        x = this.rightBound-(truckWidth+y-this.botBound);
+                        y = this.botBound;
+                        side = 3;
+                    end
                 end
-                 if side==4
-                    y=y-truckWidth;
+                if side == 1; % als eerste zijde 1
+                    if x+truckWidth<this.rightBound % check of de truckwidth meer is als de resterende breedte in de x richting
+                        x = x+truckWidth;
+                    else
+                        y = this.topBound+(truckWidth+x-this.rightBound); % bereken de extra verplaatsing in y richting, doordat er truckwidth 'over' is 
+                        x = this.rightBound; 
+                        side = 2; 
+                    end
                 end
-                %                 if truckWith<this.topBound
-%                     x=this.leftBound+truckWith;
-%                     y=this.topBound;
-%                     side=0;
-%                 end
-%                 if truckWith>this.topBound
-%                     x=this.rightBound;
-%                     y=this.topBound+(truckWith-(this.rightBound-this.leftBound));
-%                     side=1;
-%                 end
             end
-                    
+            if abs(y-this.topBound)>truckWidth/10
+                %change 'disp' to 'error' to make it a proper error message
+                disp('The last gap between trucks is more than  1/10 of the truckWidth. This may impact accuracy.')
+            end
         end
     end
 end

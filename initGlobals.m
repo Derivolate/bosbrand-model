@@ -7,7 +7,6 @@ function initGlobals()
     global randomSpeedReducer;
     global enableIgniteFlags;
     
-    
     %Size physical of the forest in meters (this should be the square root of 80000)
     forestSize = 10000;
     %The physical width of the tiles in meters. This should be kept constant

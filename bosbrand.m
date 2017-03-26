@@ -13,7 +13,7 @@ function forest = bosbrand()
     forest = initForest();
     %Initialize the firetruck-manager as an object and let it calculate
     %it's destinations
-    ftm = fireTruckManager();
+    ftm = fireTruckManager(forest);
     %ftm.setDestinations(forest);
     
     figure;
