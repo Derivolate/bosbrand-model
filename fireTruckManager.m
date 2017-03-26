@@ -21,7 +21,7 @@ classdef fireTruckManager
                 fireTrucks(i) = ft;
             end
             this.fireTrucks = fireTrucks;   
-%             this.getBounds(forest)
+            this.getBounds(forest)
             this.leftBound=100
             this.rightBound=200
             this.topBound=100
