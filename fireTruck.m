@@ -3,14 +3,20 @@ classdef fireTruck
     %   Detailed explanation goes here
     
     properties
-        x;
-        y;
+        location;
         fireFighters;
         settled;
         destination;
     end
     
     methods
+        function this = fireTruck(location, destination)
+            this.location =location;
+            this.destination = destination;
+            global fireFightersPerTruck;
+            this.fireFighters = fireFightersPerTruck;
+            this.settled = 0;
+        end
         function move(forest)
             if(settled==1)
                 for i = 1:Length(fireFighters)

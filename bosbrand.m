@@ -4,8 +4,8 @@ function forest = bosbrand()
     tic;
     format shortG;
     %make all figures appear as popups. Change the last argument to docked
-    %to make all figures appear docked
-    set(0,'DefaultFigureWindowStyle','normal')
+    %to make all figures appear docked (from normal)
+    set(0,'DefaultFigureWindowStyle','docked')
     
     %Initialize all global variables
     initGlobals();
@@ -42,7 +42,7 @@ function forest = bosbrand()
         imagesc(forest);
         colormap(cMap);
         colorbar;
-        caxis([0,5]) %bepaalt de lengte van de colorscale
+        caxis([0,5]); %bepaalt de lengte van de colorscale
         drawnow;
         
         %a step-by-step evolution of the fire, press any key in the command

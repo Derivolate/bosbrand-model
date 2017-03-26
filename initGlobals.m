@@ -65,7 +65,7 @@ function initGlobals()
     v0sd = .1;
     %This is the factor by which the total speed is reduced when the fire
     %hits a firebreak
-    fireBreakFactor = .5;
+    fireBreakFactor = .2;
     %A modifier to depict the humidity of the forest
     humidityMod = 0;
     %A modifier to depict the currently falling rain
@@ -87,6 +87,7 @@ function initGlobals()
     tempFactor = getTempFactor(temp, tempLowBound, tempHighBound, tempFactorLowBound, tempFactorHighBound);
     
     global fireStationCount;
+    global fireTruckCount
     global fireTruckPerStationCount;
     global fighterPerTruckCount;
     global fighterWidth;
@@ -94,9 +95,11 @@ function initGlobals()
     global fireFighterSpeed;
     
     %The amount of fire station
-    fireStationCount = 1;
+    fireStationCount = 2;
+    %The amount of firetrucks
+    fireTruckCount=6;
     %The amount of firetrucks per fire station
-    fireTruckPerStationCount = 1;
+    fireTruckPerStationCount = fireTruckCount/fireStationCount;
     %The amount of firefighters per firetruck
     fighterPerTruckCount = 1;
     
