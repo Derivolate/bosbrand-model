@@ -19,8 +19,8 @@ function newForest = spreadFire(forest)
             continue;
         end
         for y = 1:forestHeight
-            if(skipY >0)
-                skipY= skipY-1;
+            if(skipY > 0)
+                skipY = skipY-1;
                 continue;
             end
             %if the tile is -1, this means that the whole parcel hasn't
@@ -30,7 +30,7 @@ function newForest = spreadFire(forest)
                 continue;
             end
             %als het bos al in de fik staat, het een brandgang is of er brandweer staat, kijk er niet naar
-            if(forest(y,x)==1|| isFireBreak(forest(y,x)))
+            if(forest(y,x)==1||isFireBreak(forest(y,x)))
                 continue;
             end
             

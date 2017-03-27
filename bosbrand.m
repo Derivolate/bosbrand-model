@@ -1,7 +1,7 @@
 
-function forest = bosbrand()
+function bosbrand()
     %start timer
-    tic;
+%     tic;
     format shortG;
     %make all figures appear as popups. Change the last argument to docked
     %to make all figures appear docked (from normal)
@@ -15,7 +15,7 @@ function forest = bosbrand()
     %it's destinations
     ftm = fireTruckManager(forest);
     %ftm.setDestinations(forest);
-    
+
     figure;
     cMap = getCMap();
     pCounter=0;
@@ -29,8 +29,7 @@ function forest = bosbrand()
     %Set the oldForest to an empty matrix to make sure we can loop the
     %first time
     oldForest = zeros(size(forest));
-    while(~isequal(forest,oldForest))
-        
+    while 1%(~isequal(forest,oldForest))
         %copy the forest to oldForest
         oldForest = forest;
         %let the fire spread one tick
@@ -40,8 +39,8 @@ function forest = bosbrand()
         
         %stuff necessary for the figure
         imagesc(forest);
-        colormap(cMap);
         colorbar;
+        colormap(cMap);
         caxis([0,5]); %bepaalt de lengte van de colorscale
         drawnow;
         
@@ -53,7 +52,7 @@ function forest = bosbrand()
 %         end
         pCounter=pCounter+1;
         %display elapsed time
-        toc
+%         toc
         
     end
 end

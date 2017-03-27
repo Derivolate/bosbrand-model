@@ -8,7 +8,7 @@ function initGlobals()
     global enableIgniteFlags;
     
     %Size physical of the forest in meters (this should be the square root of 80000)
-    forestSize = 10000;
+    forestSize = 1000;
     %The physical width of the tiles in meters. This should be kept constant
     tileWidth = 10;
     %The amount of firebreaks in the x and y direction
@@ -86,6 +86,7 @@ function initGlobals()
     tempFactor = getTempFactor(temp, tempLowBound, tempHighBound, tempFactorLowBound, tempFactorHighBound);
     
     global fireStationCount;
+    global stationCoords;
     global fireTruckCount
     global fireTruckPerStationCount;
     global fighterPerTruckCount;
@@ -95,6 +96,8 @@ function initGlobals()
     
     %The amount of fire station
     fireStationCount = 2;
+    %the coordinates of the fire stations, a ix2-matrix
+    stationCoords = [1 1; forestWidth forestHeight];    
     %The amount of firetrucks
     fireTruckCount=6;
     %The amount of firetrucks per fire station
@@ -109,6 +112,15 @@ function initGlobals()
     fireTruckSpeed = 1;
     %The speed in tiles/iteration at which a firefighter will walk
     fireFighterSpeed = 1;
+    
+    % some flags
+    global readyFlag
+    global errorFlag 
+    
+    % all firetrucks are in position
+    readyFlag = 0; 
+    % firetrucks might not be space properly
+    errorFlag = 0; 
 end
 
 function tempFactor = getTempFactor(temp, tempLowBound, tempHighBound, tempFactorLowBound, tempFactorHighBound)

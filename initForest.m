@@ -7,12 +7,12 @@ function forest = initForest()
     
     %{
     Legend forest:
-        0 = niet brandend bos
-        1 = brandend bos, rood
-        2 = brandgang, bruin
-        3 = brandweerauto, geel
-        4 = brandweerman, blue
-        5 = zij brandweerman, cyan
+        0 = no fire
+        1 = fire, red
+        2 = firebreak, brown
+        3 = firetruck, yellow
+        4 = firefighter, blue
+        5 = side firefighter, cyan
     %}
     
     %Create an empty matrix with the right sizes to hold the forest
@@ -53,6 +53,7 @@ function forest = initForest()
     forest(y,x) = 1;
     x
     y
+    
     
     xTemp = x;
     %remove the parcel-ignited-flag

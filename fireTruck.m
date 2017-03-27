@@ -11,8 +11,8 @@ classdef fireTruck
     
     methods
         function this = fireTruck(location, destination)
-            this.location =location;
-            this.destination = destination;
+%             this.location =location;
+%             this.destination = destination;
             global fireFightersPerTruck;
             this.fireFighters = fireFightersPerTruck;
             this.settled = 0;
