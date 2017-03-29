@@ -5,12 +5,13 @@ function bosbrand()
     format shortG;
     %make all figures appear as popups. Change the last argument to docked
     %to make all figures appear docked (from normal)
-    set(0,'DefaultFigureWindowStyle','docked')
+    set(0,'DefaultFigureWindowStyle','normal')
     
     %Initialize all global variables
     initGlobals();
     %Initialize the forest
     forest = initForest();
+    costs = calculateCosts()
     %Initialize the firetruck-manager as an object and let it calculate
     %it's destinations
     ftm = fireTruckManager(forest);
@@ -55,6 +56,7 @@ function bosbrand()
 %         toc
         
     end
+    envDamage = calculateEnvDamage(forest)
 end
 
 function cMap = getCMap()

@@ -207,7 +207,8 @@ classdef fireTruckManager
             
         end
         
-        function truckCoords = getCoords(this, forest) %computes the coordinates trucks are heading towards
+        %computes the coordinates trucks are heading towards
+        function truckCoords = getCoords(this, forest) 
             global fireTruckCount
             global errorFlag
             

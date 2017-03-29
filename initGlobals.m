@@ -6,7 +6,13 @@ function initGlobals()
     global randomFireSpread;
     global randomSpeedReducer;
     global enableIgniteFlags;
-    
+    %These variables are global because they are needed for the calculation
+    %of the costs and the environment damage
+    global fireBreakWidthPhysX;
+    global fireBreakWidthPhysY;
+    global fireBreakCountX;
+    global fireBreakCountY;
+    global tileWidth;
     %Size physical of the forest in meters (this should be the square root of 80000)
     forestSize = 1000;
     %The physical width of the tiles in meters. This should be kept constant
