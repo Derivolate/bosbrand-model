@@ -14,15 +14,15 @@ function initGlobals()
     global fireBreakCountY;
     global tileWidth;
     %Size physical of the forest in meters (this should be the square root of 80000)
-    forestSize = 1000;
+    forestSize = 100;
     %The physical width of the tiles in meters. This should be kept constant
     tileWidth = 10;
     %The amount of firebreaks in the x and y direction
-    fireBreakCountX = 10;
-    fireBreakCountY = 10;
+    fireBreakCountX = 2;
+    fireBreakCountY = 2;
     %The width of the firebreaks for the x and y direction
-    fireBreakWidthPhysX = 10; %m
-    fireBreakWidthPhysY = 10; %m
+    fireBreakWidthPhysX = 2; %m
+    fireBreakWidthPhysY = 2; %m
     
     %Do some magic mathematics to compensate in the width and height of the
     %forest matrix for the firebreaks which won't take up any tiles (at
@@ -105,9 +105,12 @@ function initGlobals()
     %the coordinates of the fire stations, a ix2-matrix
     stationCoords = [1 1; forestWidth forestHeight];    
     %The amount of firetrucks
-    fireTruckCount=6;
+    fireTruckCount=8;
     %The amount of firetrucks per fire station
     fireTruckPerStationCount = fireTruckCount/fireStationCount;
+    if~(fireTruckPerStationCount == round(fireTruckPerStationCount))
+        error('firetruck can not be evenly distributed');
+    end
     %The amount of firefighters per firetruck
     fighterPerTruckCount = 1;
     

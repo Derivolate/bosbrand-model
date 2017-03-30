@@ -25,85 +25,42 @@ classdef fireTruckManager
             
             global fireStationCount
             global fireTruckPerStationCount 
-
+            
+            % every firestation has a number of trucks, station 1 has trucks 1-3 etc. So
+            % we loop over the stations and for every station we loop the
+            % trucksPerStation. The specific trucknumbers that get assigned to a station
+            % are 1 for every truck per station (j) + the amount of trucks per station
+            % times the number of stations allready filled (i). Because i starts at 1 we
+            % have to compensate by subtracting the amount of trucks per station.
+            
             for i=1:fireStationCount %set starting locating for the fireTrucks
                 for j=1:fireTruckPerStationCount
                     truckIndex = j+i*fireTruckPerStationCount-fireTruckPerStationCount;
                     this.fireTrucks(truckIndex).location = stationCoords(i,:);
                 end
             end
-
-% every firestation has a number of trucks, station 1 has trucks 1-3 etc. So
-% we loop over the stations and for every station we loop the
-% trucksPerStation. The specific trucknumbers that get assigned to a station
-% are 1 for every truck per station (j) + the amount of trucks per station
-% times the number of stations allready filled (i). Because i starts at 1 we
-% have to compensate by subtracting the amount of trucks per station.
-        
-        %flags for when an error occurs or the trucks are ready, set to 1
-        %to see
-        end
-        
-        function forest = moveFireFighters(this, forest)
-            global fireTruckCount
-            global fireStationCount
-            global forestWidth
-            global forestHeight
-            global readyFlag
-            truckCoords = this.getCoords(forest);
             
             for i=1:fireStationCount %show the firestations //temporary
                 forest(this.stationCoords(i,2),this.stationCoords(i,1)) = 5;
             end
 
-            dir = zeros(1,fireTruckCount); %starting direction = unknown
-            for i=1:fireTruckCount %move the trucks x towards the destination
-                %setDestination in the fireTruck objects
-                this.fireTrucks(i).destination = truckCoords(i,:);
-            
-                locX = this.fireTrucks(i).location(2);
-                locY = this.fireTrucks(i).location(1);
-                destX = this.fireTrucks(i).destination(2);
-                destY = this.fireTrucks(i).destination(1);
-                
-                deltaX = destX-locX;
-                deltaY = destY-locY;
-                if ~(this.fireTrucks(i).destination==this.fireTrucks(i).location)
-                    if ((locX==forestWidth||locY==forestHeight)...
-                            ||(forest(locY,locX+1)==2 && forest(locY+1,locX)==2) ...
-                            || dir(i)==0) %check whether its a junction -> right and down een brandgang
-                        if (abs(deltaY) > abs(deltaX) && deltaY<0) % richting && positief/negatief, posifieve x is naar rechts, en positieve y naar o
-                            dir(i) = 1; %move up
-                        elseif (abs(deltaY) < abs(deltaX) && deltaX>0)
-                            dir(i) = 2; %move right
-                        elseif (abs(deltaY) > abs(deltaX) && deltaY>0)
-                            dir(i) = 3; %move down
-                        elseif (abs(deltaY) > abs(deltaX) && deltaY<0)
-                            dir(i) = 4; %move left
-                        else
-                            error('no direction found')
-                        end    
-                    end
-                    
-                    if dir(i) == 1
-                        forest(locY-1,locX) = 3;
-                        this.fireTrucks(i).location(1) = this.fireTrucks(i).location(1) - 1; %y up
-                    elseif dir(i) == 2
-                        forest(locY,locX+1) = 3;
-                        this.fireTrucks(i).location(2) = this.fireTrucks(i).location(2) + 1; %x up
-                    elseif dir(i) == 3
-                        forest(locY+1,locX) = 3;
-                        this.fireTrucks(i).location(1) = this.fireTrucks(i).location(1) + 1; %y down
-                    elseif dir(i) == 4
-                        this.fireTrucks(i).location(2) = this.fireTrucks(i).location(2) - 1; %x down
-                        forest(locY,locX-1) = 3;
-                    end
-%                     forest(locY,locX) = 2; %old location become firebreaks again
-                elseif readyFlag==0 % the truck starts deploying firefighters
-                    disp('trucks in position!')
-                    readyFlag = 1;
-                end
+        end
+        
+        function [this,forest] = moveFireFighters(this, forest)
+            global fireTruckCount
+            truckDestinations = this.getDestinations(forest);
+           
+            %Set the destination for each fireTruck
+            for i=1:fireTruckCount
+                this.fireTrucks(i) = this.fireTrucks(i).setDestination(truckDestinations(i,:));
             end
+            
+            for i=1:fireTruckCount
+                forest(this.fireTrucks(i).location(1), this.fireTrucks(i).location(2)) = 2;
+                this.fireTrucks(i) = this.fireTrucks(i).move(forest);
+                forest(this.fireTrucks(i).location(1), this.fireTrucks(i).location(2)) = 3;
+            end
+            
         end
         
         function this = getBounds(this,forest)
@@ -118,7 +75,8 @@ classdef fireTruckManager
             %loop through all columns until a tile is found that is on fire
             for x = 1:forestWidth
                 for y = 1:forestHeight
-                    if(forest(y,x)>0&&forest(y,x)<=1)
+                    %if(forest(y,x)>0&&forest(y,x)<=1)
+                    if(forest(y,x)==1)
                         %then, loop back until a tile is found with a
                         %firebreak
                         for i = x:-1:0
@@ -141,7 +99,8 @@ classdef fireTruckManager
             
             for x = 1:forestWidth
                 for y = 1: forestHeight
-                    if(forest(y,x)>0&&forest(y,x)<=1)
+                    %if(forest(y,x)>0&&forest(y,x)<=1)
+                    if(forest(y,x)==1)
                         for i = y:-1:0
                             if(forest(i,x)==2||forest(i,x)==3||forest(i,x)==4||forest(i,x)==5)
                                 this.topBound = i;
@@ -164,7 +123,8 @@ classdef fireTruckManager
             %right side of the fire
             for x = forestWidth:-1:1
                 for y = 1: forestHeight
-                    if(forest(y,x)>0&&forest(y,x)<=1)
+                    %if(forest(y,x)>0&&forest(y,x)<=1)
+                    if(forest(y,x)==1)
                         %And loop forward when we found fire until we find
                         %a firebreak
                         for i = x:forestWidth
@@ -187,7 +147,8 @@ classdef fireTruckManager
             
             for y = forestHeight:-1:1
                 for x = 1: forestWidth
-                    if(forest(y,x)>0&&forest(y,x)<=1)
+                    %if(forest(y,x)>0&&forest(y,x)<=1)
+                    if(forest(y,x)==1)
                         for i = y:forestHeight
                             if(forest(i,x)==2||forest(i,x)==3||forest(i,x)==4||forest(i,x)==5)
                                 this.botBound = i;
@@ -208,7 +169,7 @@ classdef fireTruckManager
         end
         
         %computes the coordinates trucks are heading towards
-        function truckCoords = getCoords(this, forest) 
+        function truckDestinations = getDestinations(this, forest) 
             global fireTruckCount
             global errorFlag
             
@@ -266,7 +227,7 @@ classdef fireTruckManager
                 %disp('The last gap between trucks is more than  1/10 of the truckWidth. This may impact accuracy.')
                   errorFlag = 1;
             end
-            truckCoords = round(truckCoords);
+            truckDestinations = round(truckCoords);
         end
     end
 end

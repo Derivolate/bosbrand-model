@@ -47,8 +47,8 @@ function forest = initForest()
         y = ceil(rand()*forestHeight);
     end
      
-%     x= 3;
-%     y= 3;
+     x= 8;
+     y= 8;
      
     forest(y,x) = 1;
     x

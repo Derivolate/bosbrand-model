@@ -30,13 +30,13 @@ function bosbrand()
     %Set the oldForest to an empty matrix to make sure we can loop the
     %first time
     oldForest = zeros(size(forest));
-    while 1%(~isequal(forest,oldForest))
+    while (~isequal(forest,oldForest))
         %copy the forest to oldForest
         oldForest = forest;
         %let the fire spread one tick
         forest = spreadFire(forest);
         %let the fire brigade react to it
-        forest = ftm.moveFireFighters(forest);
+        [ftm,forest] = ftm.moveFireFighters(forest);
         
         %stuff necessary for the figure
         imagesc(forest);
