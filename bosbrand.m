@@ -11,7 +11,6 @@ function bosbrand()
     initGlobals();
     %Initialize the forest
     forest = initForest();
-    costs = calculateCosts()
     %Initialize the firetruck-manager as an object and let it calculate
     %it's destinations
     ftm = fireTruckManager(forest);
@@ -31,13 +30,17 @@ function bosbrand()
     %first time
     oldForest = zeros(size(forest));
 %     while ~(isequal(forest,oldForest) || ftm.fireSurrounded == 1)
+    i = 0;
     while ~(ftm.fireSurrounded == 1)
+        i = i+1;
         %copy the forest to oldForest
         oldForest = forest;
         %let the fire spread one tick
         forest = spreadFire(forest);
         %let the fire brigade react to it
-        [ftm,forest] = ftm.moveFireFighters(forest);
+        if(i>82)
+            [ftm,forest] = ftm.moveFireFighters(forest);
+        end
         
         %stuff necessary for the figure
         imagesc(forest);

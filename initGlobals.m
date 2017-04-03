@@ -102,7 +102,7 @@ function initGlobals()
     global fireFighterSpeed;
     
     %The amount of fire station
-    fireStationCount = 1;
+    fireStationCount = 3;
     %the coordinates of the fire stations, a ix2-matrix
     stationCoords = getStationCoords(fireStationCount, forestWidth, forestHeight, fireBreakDistX, fireBreakDistY);    
     %The amount of firetrucks
@@ -114,7 +114,7 @@ function initGlobals()
     end
     
     %The speed in tiles/iteration at which the truck will drive
-    fireTruckSpeed = 1;
+    fireTruckSpeed = 10;
     %The speed in tiles/iteration at which a firefighter will walk
     fireFighterSpeed = 1;
     

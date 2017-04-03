@@ -86,9 +86,9 @@ classdef fireTruck
                 else
                     error('a truck is inside the forest!!!');
                 end
-                
+                this.location = [locY, locX];
             end
-            this.location = [locY, locX];
+            
             
             
         end
