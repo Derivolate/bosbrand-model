@@ -14,15 +14,15 @@ function initGlobals()
     global fireBreakCountY;
     global tileWidth;
     %Size physical of the forest in meters (this should be the square root of 80000)
-    forestSize = 100;
+    forestSize = 8.9*10^3;
     %The physical width of the tiles in meters. This should be kept constant
     tileWidth = 10;
     %The amount of firebreaks in the x and y direction
-    fireBreakCountX = 2;
-    fireBreakCountY = 2;
+    fireBreakCountX = 15;
+    fireBreakCountY = 15;
     %The width of the firebreaks for the x and y direction
-    fireBreakWidthPhysX = 2; %m
-    fireBreakWidthPhysY = 2; %m
+    fireBreakWidthPhysX = 10; %m
+    fireBreakWidthPhysY = 10; %m
     
     %Do some magic mathematics to compensate in the width and height of the
     %forest matrix for the firebreaks which won't take up any tiles (at
@@ -44,7 +44,7 @@ function initGlobals()
     randomFireSpread = 2;
     %factor by which the speed at which the fire spreads is reduced as a
     %whole, but only when randomFireSpread is 1.
-    randomSpeedReducer = 3;
+    randomSpeedReducer = 3; %DEPRECATED
     %Optimize the code by keeping track wich parcels are already ignited
     %and which not so the algorithm can skip them
     enableIgniteFlags = 1;
@@ -52,7 +52,8 @@ function initGlobals()
     
     global v0;
     global v0sd;
-    global fireBreakFactor;
+    global fireBreakFactorX;
+    global fireBreakFactorY;
     global windDir;
     global windStr;
     global gamma; 
@@ -60,24 +61,26 @@ function initGlobals()
     
     %The direction in which the wind is blowing. This is measured in
     %radians starting at the axis to the right and then clockwise
-    windDir = (1/3)*pi;
+    windDir = 0;
     %The wind strength
-    windStr = .05;
+    windStr = .3;
     %The base value for the spreading of the fire. This is the mean if
     %randomFireSpread is set to 2;
     v0 = .2;
     %If randomFireSpread is set to 2, this is the standard deviation
-    v0sd = .1;
+    v0sd = .2;
     %This is the factor by which the total speed is reduced when the fire
     %hits a firebreak
-    fireBreakFactor = .2;
+    %TODO
+    fireBreakFactorX = 1/(1+(fireBreakWidthPhysX/5)^2);
+    fireBreakFactorY = 1/(1+(fireBreakWidthPhysY/5)^2);
     %A modifier to depict the humidity of the forest
-    humidityMod = 0;
+    humidityMod = .2;
     %A modifier to depict the currently falling rain
-    rainMod = 0;
+    rainMod = .2;
     gamma = humidityMod+rainMod;
     %The temparature in celcius
-    temp = 15;
+    temp = 20.5;
     %The temperature value for which all values less then this will have a 
     %contstant factor
     tempLowBound = 10;
@@ -95,41 +98,78 @@ function initGlobals()
     global stationCoords;
     global fireTruckCount
     global fireTruckPerStationCount;
-    global fighterPerTruckCount;
-    global fighterWidth;
     global fireTruckSpeed;
     global fireFighterSpeed;
     
     %The amount of fire station
-    fireStationCount = 2;
+    fireStationCount = 1;
     %the coordinates of the fire stations, a ix2-matrix
-    stationCoords = [1 1; forestWidth forestHeight];    
+    stationCoords = getStationCoords(fireStationCount, forestWidth, forestHeight, fireBreakDistX, fireBreakDistY);    
     %The amount of firetrucks
-    fireTruckCount=8;
+    fireTruckCount = 6;
     %The amount of firetrucks per fire station
     fireTruckPerStationCount = fireTruckCount/fireStationCount;
     if~(fireTruckPerStationCount == round(fireTruckPerStationCount))
         error('firetruck can not be evenly distributed');
     end
-    %The amount of firefighters per firetruck
-    fighterPerTruckCount = 1;
     
-    %The amount of extra tiles the firefighter will cover on top of the one
-    %he is standing on.
-    fighterWidth = 1;
     %The speed in tiles/iteration at which the truck will drive
     fireTruckSpeed = 1;
     %The speed in tiles/iteration at which a firefighter will walk
     fireFighterSpeed = 1;
     
-    % some flags
-    global readyFlag
-    global errorFlag 
-    
-    % all firetrucks are in position
-    readyFlag = 0; 
-    % firetrucks might not be space properly
-    errorFlag = 0; 
+   
+end
+
+function stationCoords= getStationCoords(fireStationCount, forestWidth, forestHeight, fireBreakDistX, fireBreakDistY)
+    if(fireStationCount ==1)
+        x1 = forestWidth;
+        y1 = round(forestHeight/2);
+        while~(mod(y1-1,fireBreakDistY+1)==0)
+            y1 = y1+1;
+        end
+        stationCoords=[y1 x1];
+    elseif(fireStationCount ==2)
+        x1 = 1;
+        x2 = forestWidth;
+        y1 = round(forestHeight/2);
+        while~(mod(y1-1,fireBreakDistY+1)==0)
+            y1 = y1+1;
+        end
+        y2 = y1;
+        stationCoords=[y1 x1; y2 x2];
+    elseif(fireStationCount ==3)
+        x1 = 1;
+        y1 = round(forestHeight/2);
+        while~(mod(y1-1,fireBreakDistY+1)==0)
+            y1 = y1+1;
+        end
+        
+        x2 = round((4/5)*forestWidth);
+        while~(mod(x2-1,fireBreakDistX+1)==0)
+            x2 = x2+1;
+        end
+        y2 = 1;
+        x3 = x2;
+        y3 = forestHeight;
+        stationCoords=[y1 x1; y2 x2; y3 x3];
+    elseif(fireStationCount ==4)
+        x1 = floor(forestWidth/2);
+        while~(mod(x1-1,fireBreakDistX+1)==0)
+            x1 = x1+1;
+        end
+        y1 = 1;
+        x2 = forestWidth;
+        y2 = floor(forestWidth/2);
+        while~(mod(y2-1,fireBreakDistY+1)==0)
+            y2 = y2+1;
+        end
+        x3 = x1;
+        y3 = forestHeight;
+        x4 = 1;
+        y4 = y2;
+        stationCoords=[y1 x1; y2 x2; y3 x3; y4 x4];
+    end
 end
 
 function tempFactor = getTempFactor(temp, tempLowBound, tempHighBound, tempFactorLowBound, tempFactorHighBound)

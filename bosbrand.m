@@ -30,7 +30,8 @@ function bosbrand()
     %Set the oldForest to an empty matrix to make sure we can loop the
     %first time
     oldForest = zeros(size(forest));
-    while (~isequal(forest,oldForest))
+%     while ~(isequal(forest,oldForest) || ftm.fireSurrounded == 1)
+    while ~(ftm.fireSurrounded == 1)
         %copy the forest to oldForest
         oldForest = forest;
         %let the fire spread one tick

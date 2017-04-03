@@ -8,7 +8,8 @@ function newForest = spreadFire(forest)
     global windDir;
     global windStr;
     global fireBreak;
-    global fireBreakFactor;
+    global fireBreakFactorX;
+    global fireBreakFactorY;
     global randomFireSpread;
     fireBreak = 1;
     
@@ -49,7 +50,7 @@ function newForest = spreadFire(forest)
                     %fire
                     if(forest(y,x+1)==1||(forest(y,x+1)==2&&forest(y,x+2)==1))
                         if(forest(y,x+1)==2)
-                            fireBreak = fireBreakFactor;
+                            fireBreak = fireBreakFactorX;
                         else
                             fireBreak = 1;
                         end
@@ -63,7 +64,7 @@ function newForest = spreadFire(forest)
                 if(~(forest(y,x-1)==3||forest(y,x-1)==4||forest(y,x-1)==5))
                     if(forest(y,x-1)==1||(forest(y,x-1)==2&&forest(y,x-2)==1))
                         if(forest(y,x-1)==2)
-                            fireBreak = fireBreakFactor;
+                            fireBreak = fireBreakFactorX;
                         else
                             fireBreak = 1;
                         end
@@ -78,7 +79,7 @@ function newForest = spreadFire(forest)
                 if(~(forest(y+1,x)==3||forest(y+1,x)==4||forest(y+1,x)==5))
                     if(forest(y+1,x)==1||(forest(y+1,x)==2&&forest(y+2,x)==1))
                         if(forest(y+1,x)==2)
-                            fireBreak = fireBreakFactor;
+                            fireBreak = fireBreakFactorY;
                         else
                             fireBreak = 1;
                         end
@@ -92,7 +93,7 @@ function newForest = spreadFire(forest)
                 if(~(forest(y-1,x)==3||forest(y-1,x)==4||forest(y-1,x)==5))
                     if(forest(y-1,x)==1||(forest(y-1,x)==2&&forest(y-2,x)==1))
                         if(forest(y-1,x)==2)
-                            fireBreak = fireBreakFactor;
+                            fireBreak = fireBreakFactorY;
                         else
                             fireBreak = 1;
                         end
