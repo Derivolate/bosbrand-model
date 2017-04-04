@@ -1,28 +1,46 @@
 function initGlobals()
-    global forestWidth;
-    global forestHeight;
+% the ones we vary are here
     global fireBreakDistX;
     global fireBreakDistY;
+    global fireBreakWidthPhysX;
+    global fireBreakWidthPhysY;
+    global fireBreakCountX;
+    global fireBreakCountY;
+    global fireStationCount;
+    
+    fireBreakWidthPhysX = 10; %m
+    fireBreakWidthPhysY = 10; %m
+    fireBreakCountX = 10;
+    fireBreakCountY = 10;
+    fireStationCount = 1;
+    extraTrucks = 0;
+    
+
+
+    global forestWidth;
+    global forestHeight;
+%     global fireBreakDistX;
+%     global fireBreakDistY;
     global randomFireSpread;
     global randomSpeedReducer;
     global enableIgniteFlags;
     %These variables are global because they are needed for the calculation
     %of the costs and the environment damage
-    global fireBreakWidthPhysX;
-    global fireBreakWidthPhysY;
-    global fireBreakCountX;
-    global fireBreakCountY;
+%     global fireBreakWidthPhysX;
+%     global fireBreakWidthPhysY;
+%     global fireBreakCountX;
+%     global fireBreakCountY;
     global tileWidth;
     %Size physical of the forest in meters (this should be the square root of 80000)
     forestSize = 8.9*10^3;
     %The physical width of the tiles in meters. This should be kept constant
     tileWidth = 10;
     %The amount of firebreaks in the x and y direction
-    fireBreakCountX = 15;
-    fireBreakCountY = 15;
+%     fireBreakCountX = 15;
+%     fireBreakCountY = 15;
     %The width of the firebreaks for the x and y direction
-    fireBreakWidthPhysX = 10; %m
-    fireBreakWidthPhysY = 10; %m
+%     fireBreakWidthPhysX = 10; %m
+%     fireBreakWidthPhysY = 10; %m
     
     %Do some magic mathematics to compensate in the width and height of the
     %forest matrix for the firebreaks which won't take up any tiles (at
@@ -94,7 +112,7 @@ function initGlobals()
     %Use a linear function to get the actual temperature factor
     tempFactor = getTempFactor(temp, tempLowBound, tempHighBound, tempFactorLowBound, tempFactorHighBound);
     
-    global fireStationCount;
+%     global fireStationCount;
     global stationCoords;
     global fireTruckCount
     global fireTruckPerStationCount;
@@ -102,11 +120,11 @@ function initGlobals()
     global fireFighterSpeed;
     
     %The amount of fire station
-    fireStationCount = 3;
+%     fireStationCount = 3;
     %the coordinates of the fire stations, a ix2-matrix
     stationCoords = getStationCoords(fireStationCount, forestWidth, forestHeight, fireBreakDistX, fireBreakDistY);    
     %The amount of firetrucks
-    fireTruckCount = 6;
+    fireTruckCount = 4*fireStationCount + extraTrucks;
     %The amount of firetrucks per fire station
     fireTruckPerStationCount = fireTruckCount/fireStationCount;
     if~(fireTruckPerStationCount == round(fireTruckPerStationCount))
@@ -121,8 +139,8 @@ function initGlobals()
    
 end
 
-function stationCoords= getStationCoords(fireStationCount, forestWidth, forestHeight, fireBreakDistX, fireBreakDistY)
-    if(fireStationCount ==1)
+function stationCoords = getStationCoords(fireStationCount, forestWidth, forestHeight, fireBreakDistX, fireBreakDistY)
+    if(fireStationCount == 1)
         x1 = forestWidth;
         y1 = round(forestHeight/2);
         while~(mod(y1-1,fireBreakDistY+1)==0)

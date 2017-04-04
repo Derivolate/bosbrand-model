@@ -1,5 +1,5 @@
 
-function bosbrand()
+function envDmg = bosbrand()
     %start timer
 %     tic;
     format shortG;
