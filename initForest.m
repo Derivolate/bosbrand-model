@@ -38,6 +38,7 @@ function forest = initForest()
     %forest
     x = 1;
     y = 1;
+    n = 0;
     while(~(forest(y,x)==0 &&...
            (forest(y-1,x)==0 || forest(y-1,x)==-1) &&...
             forest(y+1,x)==0 &&...
@@ -45,14 +46,20 @@ function forest = initForest()
             forest(y,x-1)==0))
         x = ceil(rand()*forestWidth);
         y = ceil(rand()*forestHeight);
+        %als ie vakjes meerdere keren begint te checken, dan liggen de
+        %brandgangen te dicht bij elkaar -> geen brand
+        if n>(forestWidth*forestHeight)
+            error('no lightning location found');
+        else
+            n = n+1;
+        end
     end
      
 %      x= 6;
 %      y= 6;
      
     forest(y,x) = 1;
-    x
-    y
+
     
     
     xTemp = x;

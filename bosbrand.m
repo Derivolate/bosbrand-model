@@ -42,7 +42,7 @@ function envDmg = bosbrand()
             [ftm,forest] = ftm.moveFireFighters(forest);
         end
         
-        %stuff necessary for the figure
+%         %stuff necessary for the figure
         imagesc(forest);
         colorbar;
         colormap(cMap);
@@ -55,16 +55,18 @@ function envDmg = bosbrand()
 %             pause;
 %             pCounter=0;
 %         end
-        pCounter=pCounter+1;
+%         pCounter=pCounter+1;
         %display elapsed time
 %         toc
         
     end
-    envDamage = calculateEnvDamage(forest)
+    envDmg=zeros(1,3);
+    envDmg = calculateEnvDamage(forest);
+
 end
 
 function cMap = getCMap()
-    cNoFire = [83,244,66];          %Preen
+    cNoFire = [83,244,66];          %Green
     cMiddleFire = [244,241,66];     %Orange
     cLit = [244,66,66];             %Red
     cFireBreak = [139 69 19];       %Brown

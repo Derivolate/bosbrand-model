@@ -1,4 +1,4 @@
-function envDamage = calculateEnvDamage(forest)
+function envDmg = calculateEnvDamage(forest)
     envDamage = 0;
     global fireBreakWidthPhysX;
     global fireBreakWidthPhysY;
@@ -7,6 +7,8 @@ function envDamage = calculateEnvDamage(forest)
     global tileWidth;
     global forestWidth;
     global forestHeight;
+    global burntArea;
+    global fireBreakArea;
     
     %The total area of the fireBreaks is the amount of fireBreaks times the
     %width (in x and y direction), minus the amount of junctions (amount of
@@ -26,4 +28,5 @@ function envDamage = calculateEnvDamage(forest)
     end 
     burntArea = burntTilesCount*tileWidth^2;
     envDamage = burntArea+fireBreakArea;
+    envDmg=[burntArea fireBreakArea envDamage];
 end

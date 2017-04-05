@@ -1,26 +1,25 @@
 function initGlobals()
 % the ones we vary are here
-    global fireBreakDistX;
-    global fireBreakDistY;
     global fireBreakWidthPhysX;
     global fireBreakWidthPhysY;
     global fireBreakCountX;
     global fireBreakCountY;
     global fireStationCount;
-    
-    fireBreakWidthPhysX = 10; %m
-    fireBreakWidthPhysY = 10; %m
-    fireBreakCountX = 10;
-    fireBreakCountY = 10;
-    fireStationCount = 1;
-    extraTrucks = 0;
+    global extraTrucks
+%     
+%     fireBreakWidthPhysX = 10; %m
+%     fireBreakWidthPhysY = 10; %m
+%     fireBreakCountY = 2;
+%     fireBreakCountX = 2*fireBreakCountY;
+%     fireStationCount = 3;
+
     
 
 
     global forestWidth;
     global forestHeight;
-%     global fireBreakDistX;
-%     global fireBreakDistY;
+    global fireBreakDistX;
+    global fireBreakDistY;
     global randomFireSpread;
     global randomSpeedReducer;
     global enableIgniteFlags;
