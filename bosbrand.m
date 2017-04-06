@@ -5,7 +5,7 @@ function envDmg = bosbrand()
     format shortG;
     %make all figures appear as popups. Change the last argument to docked
     %to make all figures appear docked (from normal)
-    set(0,'DefaultFigureWindowStyle','normal')
+    set(0,'DefaultFigureWindowStyle','docked')
     
     %Initialize all global variables
     initGlobals();

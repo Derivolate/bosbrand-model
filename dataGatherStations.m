@@ -1,3 +1,5 @@
+   %%% to calculate the ideal frequentie 
+
     clear All; close All; clc;
     global fireBreakWidthPhysX;
     global fireBreakWidthPhysY;
@@ -8,20 +10,20 @@
     
     fireBreakWidthPhysX = 10; %m
     fireBreakWidthPhysY = 10; %m
-%     fireBreakCountY = 1;
-%     fireBreakCountX = 2*fireBreakCountY;
-    fireStationCount = 2;
+    fireBreakCountY = 0;
+    fireBreakCountX = 2*fireBreakCountY;
+%     fireStationCount = 0;
     extraTrucks = 0;
 
-    maxFireBreakCountY = 36;
+    maxFireStationCount = 3;
     
-    test=zeros((maxFireBreakCountY),4);
-    for i=1:maxFireBreakCountY
-        fireBreakCountY = i;
-        fireBreakCountX = 2*fireBreakCountY;
+    test=zeros((maxFireStationCount),4);
+    for i=1:maxFireStationCount
+        fireStationCount = i;
         values=bosbrand()
         test(i,:)=[i,values];
     end
-    %[burntArea fireBreakArea envDamage]
+    %[burntArea fireBreakArea envDamage] = de sequence of data in the excel
+    %sheet
     xlswrite('testdata.xls',test)
     test
