@@ -1,23 +1,30 @@
    %%% to calculate the ideal frequentie 
 
     clear All; close All; clc;
-    global fireBreakWidthPhysX;
-    global fireBreakWidthPhysY;
-    global fireBreakCountX;
-    global fireBreakCountY;
-    global fireStationCount;
+    global fireBreakWidthPhysX
+    global fireBreakWidthPhysY
+    global fireBreakCountX
+    global fireBreakCountY
+    global fireStationCount
     global extraTrucks
+    global lightningX
+    global lightningY
+    global forestWidth
+    global forestHeight
     
     fireBreakWidthPhysX = 5; %m
     fireBreakWidthPhysY = 5; %m
     fireBreakCountY = 17;
     fireBreakCountX = fireBreakCountY;
-    fireStationCount = 2;
-    extraTrucks = 0;
+    fireStationCount = 1;
+%     extraTrucks = 0;
+    
+    %the coordinate
+    lightningX = forestWidth/4; % computing the 
+    lightningY = forestHeight/4;
 
-    maxExtraTrucks = 80;
-    step = 4;
-
+    maxExtraTrucks = 6;
+    step = 1;
     
     test=zeros((maxExtraTrucks/step),4);
     for i=0:step:maxExtraTrucks

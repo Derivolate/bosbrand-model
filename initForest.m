@@ -54,9 +54,12 @@ function forest = initForest()
             n = n+1;
         end
     end
-     
-%      x= 6;
-%      y= 6;
+    
+    %temporary constant fire start
+    global lightningX
+    global lightningY
+     x = round(lightningX)
+     y = round(lightningY)
      
     forest(y,x) = 1;
 
