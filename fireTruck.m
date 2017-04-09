@@ -9,7 +9,7 @@ classdef fireTruck
         location;
         destination;
         %The direction in the x- and y-axis in which we are/were moving.
-        %This is used to prevent a bug discussed in VERWIJZING
+        %This is used to prevent a bug discussed in paragraph 4.6.2
         yDirection;
         xDirection;
         %A flag to check if we are done with unloading firefighters. This
@@ -90,7 +90,6 @@ classdef fireTruck
                 %destination is and the destination in the same way between
                 %2 other junctions so that the firetruck would need to take
                 %2 of the same turns to arrive at that destination.
-                %%VERWIJZING
                 if (forest(locY,locX+xMod)>=2 && forest(locY+yMod,locX)>=2)
                      if (abs(deltaY) >= abs(deltaX) && abs(deltaY)>0)
                         locY = locY + sign(deltaY);

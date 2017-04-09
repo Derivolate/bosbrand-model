@@ -153,7 +153,7 @@ end
 %given location. If that is the case, that parcel is stripped of it's flags
 %that it cannot ignite as there is at least 1 neigbouring tile that can
 %ignite the parcel and thus this parcel should also be checked in the
-%future. %VERWIJZING
+%future. optimization for this is discussed in the last part of paragraph 5.1
 function forest = checkForFlags(forest,y,x)
     global fireBreakDistX;
     global fireBreakDistY;
@@ -214,6 +214,8 @@ function forest = checkForFlags(forest,y,x)
     end
 end
 
+%This function is the actual implementation of the formula for the fire
+%speed. This formula is heavily discussed in paragraph 4.3.3
 function v = fireSpeed()
     global v0;
     global v0sd;

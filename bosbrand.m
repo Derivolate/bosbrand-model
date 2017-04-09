@@ -24,7 +24,7 @@ function envDmg = bosbrand()
         forest = spreadFire(forest);
         %Count the amount of iterations. This is to simulate the time the
         %fire-brigade needs to react. 82 iterations is about 10 minutes
-        %VERWIJZING
+        %which is in accordance to paragraph 4.1.3.3.1 and 4.3.5
         if(i>82)
             [ftm,forest] = ftm.moveFireFighters(forest);
         end

@@ -64,9 +64,8 @@ classdef fireTruckManager
             %If the destinations of the firetrucks aren't the same as the
             %previous cycle, then all firetrucks should pack and move to
             %their new location. Also all the firefighters should be
-            %instantly cleared so the fire can spread as it should
-            
-            %VERWIJZING
+            %instantly cleared so the fire can spread as it should. This is
+            %further explained in paragraph 4.3.3: Brandweer`
             if~(isequal(this.truckDestinations,oldDestinations))
                forest = clearFireFighters(this, forest); 
             end

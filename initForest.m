@@ -8,7 +8,9 @@ function forest = initForest()
     
     %{
     Legend forest:
-        -1= flag to indicate that the parcel isn't on fire yet %VERWIJZING
+        -1= flag to indicate that the parcel isn't on fire yet. The
+            optimization for this is discussed in the last part of
+            paragraph 5.1
         0 = forest and no fire, green
         0< <1 = forest and igniting but not yet on fire, gradient from
             green to yellow to red

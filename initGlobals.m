@@ -77,7 +77,6 @@ function initGlobals()
     v0sd = .2;
     %This is the factor by which the total speed is reduced when the fire
     %hits a firebreak
-    %TODO
     fireBreakFactorX = 1/(1+(fireBreakWidthPhysX/5)^2);
     fireBreakFactorY = 1/(1+(fireBreakWidthPhysY/5)^2);
     %A modifier to depict the humidity of the forest
@@ -108,7 +107,6 @@ function initGlobals()
     global fireFighterSpeed;
     
     %The amount of fire station
-%     fireStationCount = 3;
     %the coordinates of the fire stations, a ix2-matrix
     stationCoords = getStationCoords(fireStationCount, forestWidth, forestHeight, fireBreakDistX, fireBreakDistY);    
     %The amount of firetrucks
@@ -127,7 +125,7 @@ function initGlobals()
    
 end
 
-%This function distributes the firestations accourding to %VERWIJZING 
+%This function distributes the firestations accourding to paragraph 4.3.3: Brandweer 
 %For each amount of firestations (1 to 4) the best locations are selected
 %and then rounded to the next junction. This is necesarry as the firetrucks
 %need to start on a junction to calculate their route.
