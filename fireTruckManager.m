@@ -1,7 +1,13 @@
 classdef fireTruckManager
-    %FIRETRUCKMANAGER Summary of this class goes here
-    %   Detailed explanation goes here
-    
+    %This class analyzes the fire so it can calculate the destinations for
+    %the firetrucks and distribute those destinations.
+    %   When moveFireFighters is called, all destinations are calculated
+    %   first. This is done by first checking the bounding firebreaks of the fire in
+    %   getBounds. Then this cirumference is sprit into parts and all 
+    %   destinations are chosendepending on the amount of firetrucks and 
+    %   the wind. In the case that there is a wind blowing, then the
+    %   concentration of firetrucks at the side of the fire to which the
+    %   wind is blowing is higher then on the opposite side.
     properties
         fireTrucks;
         leftBound;
@@ -16,7 +22,7 @@ classdef fireTruckManager
     methods
         function this = fireTruckManager(forest)
             global fireTruckCount
-            for i=1:fireTruckCount % build an array filled with firetrucks, of the class firetruck
+            for i=1:fireTruckCount % build an array filled with instances of the class firetruck
                 ft = fireTruck();
                 fireTrucks(i) = ft;
             end
@@ -42,10 +48,11 @@ classdef fireTruckManager
                 end
             end
             
-            for i=1:fireStationCount %show the firestations //temporary
+            for i=1:fireStationCount %show the firestations in the forest
                 forest(this.stationCoords(i,2),this.stationCoords(i,1)) = 5;
             end
             
+            %Of course the fire isn't surrounded as of yet
             this.fireSurrounded = 0;
         end
         
@@ -54,6 +61,12 @@ classdef fireTruckManager
             oldDestinations = this.truckDestinations;
             [this,this.truckDestinations] = this.getDestinations(forest);
             
+            %If the destinations of the firetrucks aren't the same as the
+            %previous cycle, then all firetrucks should pack and move to
+            %their new location. Also all the firefighters should be
+            %instantly cleared so the fire can spread as it should
+            
+            %VERWIJZING
             if~(isequal(this.truckDestinations,oldDestinations))
                forest = clearFireFighters(this, forest); 
             end
@@ -67,19 +80,31 @@ classdef fireTruckManager
             for i=1:fireTruckCount
                 oldX = this.fireTrucks(i).location(2);
                 oldY = this.fireTrucks(i).location(1);
+                %Move the firetrucks and if they are already settled,
+                %deploy the firefighters.
                 [this.fireTrucks(i),forest] = this.fireTrucks(i).move(forest, this.topBound, this.rightBound, this.botBound, this.leftBound);
+                %Change the previous tile to firebreak again because we
+                %aren't there anymore
                 forest(oldY, oldX) = 2;
+                %Change the new tile
                 forest(this.fireTrucks(i).location(1), this.fireTrucks(i).location(2)) = 3;
+                %Keep track of how much trucks are done with deploying
+                %their firefighters
                 if(this.fireTrucks(i).doneDeploying == 1)
                     deployCount = deployCount+1;
                 end
             end
+            %If all trucks are done with deploying their firefighters, then 
+            %the fire is surrounded
             if(deployCount == fireTruckCount)
                 this.fireSurrounded = 1;
             end
             
         end
         
+        %A algorithm which should do the 'simple task' of tracking down te
+        %coordinates of the firebreaks which surround the forest and thus
+        %on which the destinations should lie.
         function this = getBounds(this,forest)
             global forestWidth;
             global forestHeight;
@@ -301,6 +326,8 @@ classdef fireTruckManager
             truckDestinations = round(truckCoords);
         end
         
+        %This function clears the whole forest of firefighters as they are
+        %too lazy to clean up their stuff themselves
         function forest = clearFireFighters(~, forest)
             global forestWidth;
             global forestHeight

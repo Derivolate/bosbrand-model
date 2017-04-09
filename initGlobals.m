@@ -24,23 +24,11 @@ function initGlobals()
     global randomFireSpread;
     global randomSpeedReducer;
     global enableIgniteFlags;
-    %These variables are global because they are needed for the calculation
-    %of the costs and the environment damage
-%     global fireBreakWidthPhysX;
-%     global fireBreakWidthPhysY;
-%     global fireBreakCountX;
-%     global fireBreakCountY;
     global tileWidth;
     %Size physical of the forest in meters (this should be the square root of 80000)
     forestSize = 8.9*10^3;
     %The physical width of the tiles in meters. This should be kept constant
     tileWidth = 10;
-    %The amount of firebreaks in the x and y direction
-%     fireBreakCountX = 15;
-%     fireBreakCountY = 15;
-    %The width of the firebreaks for the x and y direction
-%     fireBreakWidthPhysX = 10; %m
-%     fireBreakWidthPhysY = 10; %m
     
     %Do some magic mathematics to compensate in the width and height of the
     %forest matrix for the firebreaks which won't take up any tiles (at
@@ -55,9 +43,9 @@ function initGlobals()
         If the fire has to spread randomly or determenistic.
         0 = deterministic
         1 = rolls a pseudo-random dice at the end of each calculation to
-            decide if the fire spreads
+            decide if the fire spreads. This mode is deprecated
         2 = changes the static base-speed of the firespread to a normally
-            distributed factor 
+            distributed factor. This mode is advised
     %}
     randomFireSpread = 2;
     %factor by which the speed at which the fire spreads is reduced as a
@@ -139,6 +127,10 @@ function initGlobals()
    
 end
 
+%This function distributes the firestations accourding to %VERWIJZING 
+%For each amount of firestations (1 to 4) the best locations are selected
+%and then rounded to the next junction. This is necesarry as the firetrucks
+%need to start on a junction to calculate their route.
 function stationCoords = getStationCoords(fireStationCount, forestWidth, forestHeight, fireBreakDistX, fireBreakDistY)
     if(fireStationCount == 1)
         x1 = forestWidth;

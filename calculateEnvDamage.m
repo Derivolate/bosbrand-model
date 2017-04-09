@@ -18,6 +18,7 @@ function envDmg = calculateEnvDamage(forest)
                    + fireBreakWidthPhysY*fireBreakCountY*forestWidth*tileWidth)...
         - (fireBreakCountX*fireBreakCountY)*(fireBreakWidthPhysX*fireBreakWidthPhysY);
     
+    %Count all burnt tiles. If it is burnt it has value 1.
     burntTilesCount = 0;
     for x = 1:forestWidth
         for y = 1:forestHeight
@@ -26,6 +27,7 @@ function envDmg = calculateEnvDamage(forest)
             end
         end
     end 
+    %Multiply the amount of tiles by the area of 1 tile
     burntArea = burntTilesCount*tileWidth^2;
     envDamage = burntArea+fireBreakArea;
     envDmg=[burntArea fireBreakArea envDamage];

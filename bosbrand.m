@@ -1,7 +1,6 @@
 
 function envDmg = bosbrand()
-    %start timer
-%     tic;
+
     format shortG;
     %make all figures appear as popups. Change the last argument to docked
     %to make all figures appear docked (from normal)
@@ -9,60 +8,36 @@ function envDmg = bosbrand()
     
     %Initialize all global variables
     initGlobals();
-    %Initialize the forest
+    %Initialize the forest as a matrix
     forest = initForest();
-    %Initialize the firetruck-manager as an object and let it calculate
-    %it's destinations
+    %Initialize the firetruck-manager as an object
     ftm = fireTruckManager(forest);
-    %ftm.setDestinations(forest);
 
     figure;
     cMap = getCMap();
     
-    % a pause feature
-%     pCounter = 0;
-%     pStepSize = 5; %amount of steps before a pause
-    
-    %The previous version of the forest is compared with the current
-    %version of the forest. If they're the same, the whole forest is on
-    %fire or the fire brigade has the fire under control. In both cases we
-    %can stop looping.
-    
-    %Set the oldForest to an empty matrix to make sure we can loop the
-    %first time
-    oldForest = zeros(size(forest));
-%     while ~(isequal(forest,oldForest) || ftm.fireSurrounded == 1)
     i = 0;
+    %Check if the fire is surrounded by the fire-brigade
     while ~(ftm.fireSurrounded == 1)
         i = i+1;
-        %copy the forest to oldForest
-        oldForest = forest;
         %let the fire spread one tick
         forest = spreadFire(forest);
-        %let the fire brigade react to it
+        %Count the amount of iterations. This is to simulate the time the
+        %fire-brigade needs to react. 82 iterations is about 10 minutes
+        %VERWIJZING
         if(i>82)
             [ftm,forest] = ftm.moveFireFighters(forest);
         end
         
-%         %stuff necessary for the figure
+        %stuff necessary for the figure
         imagesc(forest);
         colorbar;
         colormap(cMap);
-        caxis([0,5]); %bepaalt de lengte van de colorscale
+        caxis([0,5]); 
         drawnow;
         
-        %a step-by-step evolution of the fire, press any key in the command
-        %window to unpause.
-%         if pCounter>=pStepSize
-%             pause;
-%             pCounter=0;
-%         end
-%         pCounter=pCounter+1;
-        %display elapsed time
-%         toc
-
     end
-    envDmg=zeros(1,3);
+    envDmg = zeros(1,3);
     envDmg = calculateEnvDamage(forest)
 end
 

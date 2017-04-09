@@ -1,3 +1,8 @@
+%This is the function where all the magic happens. It spreads the fire as
+%the name suggests. It loops through all forest tiles tiles and checks for 
+%each tile if there is a neighbouring tile igniting it. In this process,
+%the wind is also taken into consideration as well as firebreaks, fire
+%brigade and some optimization.
 function newForest = spreadFire(forest)
     global forestWidth;
     global forestHeight;
@@ -11,6 +16,8 @@ function newForest = spreadFire(forest)
     global fireBreakFactorX;
     global fireBreakFactorY;
     global randomFireSpread;
+    
+    %The fact that this parameter is global is a leftover from 
     fireBreak = 1;
     
     newForest = forest;
@@ -103,14 +110,21 @@ function newForest = spreadFire(forest)
                 end
             end
             
+            %Check if one of the advised randomization modes is used (see
+            %initglobals.m line 43)
             if(randomFireSpread == 0 || randomFireSpread == 2)
+                %A tile can of course not be more than 100% on fire
                 if(newForest(y,x)>=1)
                     newForest(y,x)=1;
+                    %If the igniteflags optimization is enabled, check for
+                    %possible neigbouring parcels using the checkForFlags
+                    %function
                     if(enableIgniteFlags)
                         newForest = checkForFlags(newForest,y,x);
                     end
                 end
             else
+                %This part is deprecated but is left in for reference
                 if(newForest(y,x) > 0);
                     r = 0;
                     %make sure the forest must be at least a bit on
@@ -130,23 +144,40 @@ function newForest = spreadFire(forest)
     end
 end
 
+%Shorthand to check if a given number is a firebreak.
 function bool = isFireBreak(x)
     bool = (x==2||x==3||x==4||x==5);
 end
 
+%This function checks if there is another parcel next to the tile at the
+%given location. If that is the case, that parcel is stripped of it's flags
+%that it cannot ignite as there is at least 1 neigbouring tile that can
+%ignite the parcel and thus this parcel should also be checked in the
+%future. %VERWIJZING
 function forest = checkForFlags(forest,y,x)
     global fireBreakDistX;
     global fireBreakDistY;
     global forestWidth;
     global forestHeight;
+    
+    %This is turned to one if the given coordinates are on the edge of a
+    %parcel
     removeFlag = 0;
-    tempX = x;
-    tempY = y;
+    
+    %Check if we are on the edge of a firebreak by checking if one of the
+    %neigbouring tiles is a firebreak
+    
+    %Check above
     if(isFireBreak(forest(y-1,x)))
+        %If we are at the top of the matrix, there is still a firebreak
+        %above us but there is no parcel above that firebreak, so that case
+        %needs to be excluded.
         if(~(y==2))
+            %Move to the top row of the parcel above us
             y = y-fireBreakDistY-1;
             removeFlag = 1;
         end
+    %Check below us
     elseif(isFireBreak(forest(y+1,x)))
         if(~(y+1==forestHeight))
             y = y+2;
@@ -155,6 +186,7 @@ function forest = checkForFlags(forest,y,x)
     elseif(isFireBreak(forest(y,x-1)))
         if(~(x==2))
             x = x-2;
+            %Keep going up until we find the top of the parcel
             while(~(forest(y,x)==-1)&& ~(isFireBreak(forest(y,x))))
                 y= y-1;
             end

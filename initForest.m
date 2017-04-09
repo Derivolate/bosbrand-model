@@ -1,3 +1,4 @@
+%This function initializes the matrix with all the respective numbers
 function forest = initForest()
     global fireBreakDistX;
     global fireBreakDistY;
@@ -7,12 +8,14 @@ function forest = initForest()
     
     %{
     Legend forest:
-        0 = no fire
-        1 = fire, red
+        -1= flag to indicate that the parcel isn't on fire yet %VERWIJZING
+        0 = forest and no fire, green
+        0< <1 = forest and igniting but not yet on fire, gradient from
+            green to yellow to red
+        1 = forest and on fire, red
         2 = firebreak, brown
-        3 = firetruck, yellow
-        4 = firefighter, blue
-        5 = side firefighter, cyan
+        3 = firetruck on a firebreak, yellow
+        4 = firefighter on a firebreak, blue
     %}
     
     %Create an empty matrix with the right sizes to hold the forest
@@ -46,8 +49,10 @@ function forest = initForest()
             forest(y,x-1)==0))
         x = ceil(rand()*forestWidth);
         y = ceil(rand()*forestHeight);
-        %als ie vakjes meerdere keren begint te checken, dan liggen de
-        %brandgangen te dicht bij elkaar -> geen brand
+
+        %If we looped more times than the amount of tiles in the whole
+        %matrix, then the chance is pretty big that there might not be a
+        %spot which is not completely surrounded by forest.
         if n>(forestWidth*forestHeight)
             error('no lightning location found');
         else
@@ -55,12 +60,8 @@ function forest = initForest()
         end
     end
     
-    %temporary constant fire start
-%     global lightningX
-%     global lightningY
-%      x = round(lightningX)
-%      y = round(lightningY)
-     
+    
+    %START THE FIRE
     forest(y,x) = 1;
 
     
