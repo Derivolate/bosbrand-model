@@ -1,4 +1,6 @@
-   %%% to calculate the ideal frequentie 
+   %%% to calculate the ideal amount of extra trucks
+   %%% code might not work because of double initialization of globals
+   %%% run bosbrand.m instead
 
     clear All; close All; clc;
     global fireBreakWidthPhysX

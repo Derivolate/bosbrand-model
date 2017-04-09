@@ -56,10 +56,10 @@ function forest = initForest()
     end
     
     %temporary constant fire start
-    global lightningX
-    global lightningY
-     x = round(lightningX)
-     y = round(lightningY)
+%     global lightningX
+%     global lightningY
+%      x = round(lightningX)
+%      y = round(lightningY)
      
     forest(y,x) = 1;
 

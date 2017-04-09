@@ -18,8 +18,10 @@ function envDmg = bosbrand()
 
     figure;
     cMap = getCMap();
-    pCounter=0;
-    pStepSize=5; %amount of steps before a pause
+    
+    % a pause feature
+%     pCounter = 0;
+%     pStepSize = 5; %amount of steps before a pause
     
     %The previous version of the forest is compared with the current
     %version of the forest. If they're the same, the whole forest is on
@@ -58,11 +60,10 @@ function envDmg = bosbrand()
 %         pCounter=pCounter+1;
         %display elapsed time
 %         toc
-        
+
     end
     envDmg=zeros(1,3);
-    envDmg = calculateEnvDamage(forest);
-
+    envDmg = calculateEnvDamage(forest)
 end
 
 function cMap = getCMap()
@@ -70,9 +71,9 @@ function cMap = getCMap()
     cMiddleFire = [244,241,66];     %Orange
     cLit = [244,66,66];             %Red
     cFireBreak = [139 69 19];       %Brown
-    cFireTruck=[252 240 15];        %Yellow
-    cFireFighter=[34 15 252];       %Blue
-    cFireFighterSide=[15 201 252];  %Cyan
+    cFireTruck = [252 240 15];        %Yellow
+    cFireFighter = [34 15 252];       %Blue
+    cFireFighterSide = [15 201 252];  %Cyan
     
     %Create a colormap for each color transition. The 100 intermediate
     %steps are only necessary in the first colormap but to make the other

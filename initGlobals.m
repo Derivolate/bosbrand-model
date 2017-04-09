@@ -6,15 +6,16 @@ function initGlobals()
     global fireBreakCountY;
     global fireStationCount;
     global extraTrucks
-%     
-%     fireBreakWidthPhysX = 10; %m
-%     fireBreakWidthPhysY = 10; %m
-%     fireBreakCountY = 2;
-%     fireBreakCountX = 2*fireBreakCountY;
-%     fireStationCount = 3;
+    
+    fireBreakWidthPhysX = 10; %m
+    fireBreakWidthPhysY = 10; %m
+    fireBreakCountY = 2;
+    fireBreakCountX = 2*fireBreakCountY;
+    fireStationCount = 3;
+    extraTrucks = 0;
 
     
-
+% the other variables
 
     global forestWidth;
     global forestHeight;
@@ -89,8 +90,8 @@ function initGlobals()
     %This is the factor by which the total speed is reduced when the fire
     %hits a firebreak
     %TODO
-    fireBreakFactorX = 1 %1/(1+(fireBreakWidthPhysX/5)^2);
-    fireBreakFactorY = 1 %1/(1+(fireBreakWidthPhysY/5)^2);
+    fireBreakFactorX = 1/(1+(fireBreakWidthPhysX/5)^2);
+    fireBreakFactorY = 1/(1+(fireBreakWidthPhysY/5)^2);
     %A modifier to depict the humidity of the forest
     humidityMod = .2;
     %A modifier to depict the currently falling rain
