@@ -7,13 +7,14 @@ function initGlobals()
     global fireStationCount;
     global extraTrucks
     
+%%%% comment this to use dataGather(...)
     fireBreakWidthPhysX = 10; %m
     fireBreakWidthPhysY = 10; %m
     fireBreakCountY = 2;
     fireBreakCountX = 2*fireBreakCountY;
     fireStationCount = 3;
     extraTrucks = 0;
-
+%%%% don't comment below this
     
 % the other variables
 

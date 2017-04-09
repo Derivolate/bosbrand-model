@@ -1,5 +1,8 @@
-   %%% to calculate the ideal frequency
-   %%% code might not work because of double initialization of globals
+   %%% this document is used to calculate the ideal frequency
+   
+   %%% code might not work because of double initialization of globals, in
+   %%% this document and in init.globals
+   
    %%% run bosbrand.m instead
 
     clear All; close All; clc;
@@ -19,7 +22,9 @@
 
     maxFireBreakCountY = 0;
     
-    test=zeros((maxFireBreakCountY),4);
+    % a matrix to store the EnvironmentDamage values
+    test=zeros((maxFireBreakCountY),4); 
+    % a simple loop to vary one single variable
     for i=1:maxFireBreakCountY
         fireBreakCountY = i;
         fireBreakCountX = 2*fireBreakCountY;

@@ -15,6 +15,8 @@ classdef fireTruck
         %A flag to check if we are done with unloading firefighters. This
         %is used by the fireTruckManager to check if the fire is surrounded
         doneDeploying;
+        
+        fireFighters
     end
     
     methods

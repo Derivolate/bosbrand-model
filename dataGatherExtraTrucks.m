@@ -1,5 +1,7 @@
-   %%% to calculate the ideal amount of extra trucks
-   %%% code might not work because of double initialization of globals
+   %%% this document is used to calculate the ideal amount of trucks (slightly differently)
+   %%% code might not work because of double initialization of globals, in
+   %%% this document and in init.globals
+   
    %%% run bosbrand.m instead
 
     clear All; close All; clc;
@@ -22,13 +24,15 @@
 %     extraTrucks = 0;
     
     %the coordinate
-    lightningX = forestWidth/4; % computing the 
+    lightningX = forestWidth/4; % computing the coordinate the fire starts
     lightningY = forestHeight/4;
 
     maxExtraTrucks = 6;
     step = 1;
     
+    % a matrix to store the EnvironmentDamage values
     test=zeros((maxExtraTrucks/step),4);
+    % a simple loop to vary one single variable
     for i=0:step:maxExtraTrucks
         extraTrucks = i;
         values=bosbrand()

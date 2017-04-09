@@ -1,5 +1,8 @@
- %%% to calculate the ideal amount of extra trucks
-   %%% code might not work because of double initialization of globals
+   %%% this document is used to calculate the ideal amount of trucks
+   
+   %%% code might not work because of double initialization of globals, in
+   %%% this document and in init.globals
+   
    %%% run bosbrand.m instead
    
     clear All; close All; clc;
@@ -20,8 +23,9 @@
     maxExtraTrucks = 80;
     step = 4;
 
-    
+    % a matrix to store the EnvironmentDamage values
     test=zeros((maxExtraTrucks/step),4);
+    % a simple loop to vary one single variable
     for i=0:step:maxExtraTrucks
         extraTrucks = i;
         values=bosbrand()
